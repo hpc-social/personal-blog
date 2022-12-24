@@ -1,8 +1,3 @@
-- name: "hpc.social"
-  tag: "hpc-social"
-  url: https://hpc.social/
-  feed: https://hpc.social/feed.xml
-  image: https://hpc.social/assets/img/hpc-social-blue.png
 - name: "Vanessasaurus"
   tag: "vsoch"
   feed: https://vsoch.github.io/hpc-feed.xml
@@ -27,8 +22,3 @@
   feed: https://thinking.ajdecon.org/category/computing/feed/
   url: https://thinking.ajdecon.org/
   image: https://www.ajdecon.org/pubfiles/ajdecon-covatar.jpg
-- name: "Campus Research Computing Consortium (CaRCC)"
-  tag: carcc
-  url: https://carcc.org/
-  feed: https://carcc.org/tag/hpc-social/feed/
-  image: https://carcc.org/wp-content/uploads/2019/09/logo-png-3.png
