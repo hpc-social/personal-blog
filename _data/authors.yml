@@ -27,4 +27,9 @@
   feed: https://www.gaborsamu.com/blog/index.xml
   url: https://www.gaborsamu.com/blog/
   image: https://www.gaborsamu.com/images/gpsamu.png
+- name: "Derek Weitzel's Blog"
+  tag: dweitzel
+  feed: https://derekweitzel.com/feed.xml
+  url: https://derekweitzel.com/
+  image: https://derekweitzel.com/images/bio-photo.png
   
