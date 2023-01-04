@@ -4,7 +4,7 @@
 
 This is the repository for the [syndicated blog](https://hpc.social/projects/blog/) for the hpc.social community!
 Note that we have two flavors of blogs - an aggregated personal blog (here) along with a collection
-of community blogs served from  [syndicated community blog](https://hpc.social/projects/community-blog/).
+of community blogs served from  [syndicated community blog](https://hpc.social/community-blog/).
 The criteria for adding content feeds here is the following:
 
 > The personal blogs aggregator is the "soul" of the HPC community - HPCers who are personally invested in the minutiae of the work they are doing, the projects they are working on with some content about their culture and pet pictures :D - things that we all find in common and share and talk about.
