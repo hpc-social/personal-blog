@@ -22,3 +22,9 @@
   feed: https://thinking.ajdecon.org/category/computing/feed/
   url: https://thinking.ajdecon.org/
   image: https://www.ajdecon.org/pubfiles/ajdecon-covatar.jpg
+- name: "Ramblings of a supercomputing enthusiast."
+  tag: gaborsamu
+  feed: https://www.gaborsamu.com/blog/index.xml
+  url: https://www.gaborsamu.com/blog/
+  image: https://www.gaborsamu.com/images/gpsamu.png
+  
