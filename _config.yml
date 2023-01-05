@@ -13,6 +13,12 @@ twitter_username:  hpc_social
 github_username:   hpc-social
 logo: assets/images/hpc-social-blue.png 
 
+# We use the default badge_color (red) for this one
+badge_color: "#e50039"
+
+# And our theme!
+theme: hpc-social-blog-theme
+
 author:
   name: hpc.social
   bio: High Performance Computing <br> Practitioners <br> and friends /#hpc

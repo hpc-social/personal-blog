@@ -12,3 +12,15 @@ The criteria for adding content feeds here is the following:
 You can see the background for this discussion in [this thread](https://github.com/hpc-social/blog/pull/13).
 Contribution steps are the equivalent across our community blogs, and you can
 read about them [here](https://github.com/hpc-social/blog).
+
+## Development
+
+Note that we develop with a [shared theme](https://github.com/hpc-social/hpc-social-blog-theme)
+you can generally update here via:
+
+```bash
+$ bundle install
+$ bundle update
+``` 
+
+And any changes to the theme should bed one there (and thus consistent across the sites).
