@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+    - gh-pages
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: main
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+
+    - name: Build site  
+      run: |
+        bundle install
+        bundle update
+        bundle exec jekyll build
+
+    - name: Deploy
+      if: github.ref == 'refs/heads/main'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+      run: |
+        set -xo pipefail
+        git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        git checkout -b gh-pages || git checkout "${BRANCH}"
+        git branch
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@users.noreply.github.com"
+        git status
+
+        ls -Q | grep -v _site | xargs rm -rf        
+        mv _site/* .
+        rm -rf _site
+        rm -rf .jekyll-cache
+        [[ -n "$(git status --porcelain)" ]] || exit 0
+        git add .
+        git commit -m "Build $(git rev-parse source | grep -o '^.\{10\}')"
+        git push origin "${BRANCH}" --force
