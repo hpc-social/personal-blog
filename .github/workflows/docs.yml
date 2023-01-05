@@ -2,8 +2,8 @@ name: Build
 
 on:
   push:
-    branches-ignore:
-    - gh-pages
+    branches:
+    - main
 
 jobs:
   build:
