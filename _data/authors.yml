@@ -32,4 +32,8 @@
   feed: https://derekweitzel.com/feed.xml
   url: https://derekweitzel.com/
   image: https://derekweitzel.com/images/bio-photo.png
-  
+- name: "HPC Notes Blog"
+  tag: "hpcnotes"
+  url: https://hpcnotes.com
+  feed: https://hpcnotes.com/feeds/posts/default/
+ 
