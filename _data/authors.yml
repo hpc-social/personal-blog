@@ -32,4 +32,8 @@
   feed: https://derekweitzel.com/feed.xml
   url: https://derekweitzel.com/
   image: https://derekweitzel.com/images/bio-photo.png
-  
+- name: "Surfing the Singularity"
+  tag: "surfthesing"
+  feed: https://surfthesing.blogspot.com/rss.xml
+  url: https://surfthesing.blogspot.com/
+  image: https://drive.google.com/file/d/1oGUJksd8gJlqNcOxGERFzpBaoAwqILrX
