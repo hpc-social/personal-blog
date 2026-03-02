@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-US"><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="https://hpc.social/personal-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hpc.social/personal-blog/" rel="alternate" type="text/html" hreflang="en-US" /><updated>2026-03-01T21:25:10-07:00</updated><id>https://hpc.social/personal-blog/feed.xml</id><title type="html">hpc.social - Aggregated Personal Blog</title><subtitle>Shared personal experiences and stories</subtitle><author><name>hpc.social</name><email>info@hpc.social</email></author><entry><title type="html">OpenSearch Transform Job- The Case of the Silent Failure and the Ghost Key</title><link href="https://hpc.social/personal-blog/2026/opensearch-transform-job-the-case-of-the-silent-failure-and-the-ghost-key/" rel="alternate" type="text/html" title="OpenSearch Transform Job- The Case of the Silent Failure and the Ghost Key" /><published>2026-02-13T05:00:00-07:00</published><updated>2026-02-13T05:00:00-07:00</updated><id>https://hpc.social/personal-blog/2026/opensearch-transform-job-the-case-of-the-silent-failure-and-the-ghost-key</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/opensearch-transform-job-the-case-of-the-silent-failure-and-the-ghost-key/"><![CDATA[<p>Debugging OpenSearch Transform jobs can feel like searching for a needle in a haystack, especially when the error messages are generic. This post chronicles a recent debugging journey, highlighting common pitfalls and the ultimate solution to a persistently failing transform job.</p>
+
+<h2 id="the-problem-summarizing-xrootd-stash-data">The Problem: Summarizing XRootD Stash Data</h2>
+
+<p>Our goal was straightforward: aggregate XRootD stash access logs (<code class="language-plaintext highlighter-rouge">xrd-stash*</code>) into a daily summary index (<code class="language-plaintext highlighter-rouge">osdf-summary-{year}</code>). This involved grouping by several file path components, server details, and user domains, then calculating sums, averages, and counts of metrics like <code class="language-plaintext highlighter-rouge">filesize</code>, <code class="language-plaintext highlighter-rouge">read</code>, and <code class="language-plaintext highlighter-rouge">write</code>.</p>
+
+<p>Here is a snippet of the initial (problematic) transform configuration:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"transform_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"osdf-summary-2022"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OSDF summary transform for year 2022"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"source_index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xrd-stash*"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"target_index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"osdf-summary-2022"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"page_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"groups"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"date_histogram"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"source_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@timestamp"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"target_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"@timestamp"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"calendar_interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1d"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"terms"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"source_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dirname1.keyword"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"target_field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dirname1"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"aggregations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"filesize_sum"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"sum"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filesize"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"filesize_avg"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"avg"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filesize"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+</div>
+
+<h2 id="the-symptoms-generic-errors-and-timeouts">The Symptoms: Generic Errors and Timeouts</h2>
+
+<p>The transform job kept failing with a rather unhelpful message in its metadata:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"failed"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failure_reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Failed to index the documents"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"stats"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"pages_processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"documents_processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">89737708</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"documents_indexed"</span><span class="p">:</span><span class="w"> </span><span class="mi">96000</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"index_time_in_millis"</span><span class="p">:</span><span class="w"> </span><span class="mi">44733</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"search_time_in_millis"</span><span class="p">:</span><span class="w"> </span><span class="mi">1715612</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+</div>
+
+<p>Notice the high <code class="language-plaintext highlighter-rouge">search_time_in_millis</code> compared to <code class="language-plaintext highlighter-rouge">index_time_in_millis</code>. This was a critical clue that the aggregation phase was struggling.</p>
+
+<p>Further attempts to debug with <code class="language-plaintext highlighter-rouge">_explain</code> or custom composite aggregation queries often resulted in:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">502 Bad Gateway / timed_out</code>: The query was too resource-intensive for the cluster to handle.</li>
+  <li><code class="language-plaintext highlighter-rouge">illegal_argument_exception: Missing value for [after.date_histogram]</code>: A mismatch in how the <code class="language-plaintext highlighter-rouge">after_key</code> was structured versus the <code class="language-plaintext highlighter-rouge">sources</code> in the composite aggregation.</li>
+  <li><code class="language-plaintext highlighter-rouge">illegal_argument_exception: Invalid value for [after.site], expected comparable, got [null]</code>: The transform was getting stuck on <code class="language-plaintext highlighter-rouge">null</code> values within its grouping keys.</li>
+</ul>
+
+<h2 id="the-debugging-journey-and-discoveries">The Debugging Journey and Discoveries</h2>
+
+<p>Through a series of focused queries and iterative refinements, we uncovered several interconnected issues.</p>
+
+<h3 id="1-composite-aggregation-challenges-and-the-ghost-key">1. Composite Aggregation Challenges and the “Ghost Key”</h3>
+
+<p>Our composite aggregation debugging queries kept failing. This was traced to:</p>
+
+<ul>
+  <li>Syntax mismatches: names in the <code class="language-plaintext highlighter-rouge">after</code> key must exactly match the names defined in <code class="language-plaintext highlighter-rouge">sources</code> (for example, <code class="language-plaintext highlighter-rouge">@timestamp</code> must match <code class="language-plaintext highlighter-rouge">@timestamp</code>).</li>
+  <li><code class="language-plaintext highlighter-rouge">null</code> values in <code class="language-plaintext highlighter-rouge">after_key</code>: terms aggregations can fail when <code class="language-plaintext highlighter-rouge">after_key</code> includes <code class="language-plaintext highlighter-rouge">null</code>, unless handled explicitly.</li>
+</ul>
+
+<p>Then came the key finding: a direct search for documents matching the transform’s <code class="language-plaintext highlighter-rouge">after_key</code> yielded zero results. The transform was trying to resume from a state that no longer existed in source data.</p>
+
+<h3 id="2-the-real-culprit-unparsed-garbage-data">2. The Real Culprit: Unparsed “Garbage” Data</h3>
+
+<p>An inverse query (documents missing expected fields) revealed records like:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"_index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xrd-stash-ilm-000037.reindexed"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cAqUoH4BOTrVvgqCSyKq"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET / HTTP/1.1</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"@timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-01-28T12:06:20.222Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ec2-3-110-169-111.ap-south-1.compute.amazonaws.amazonaws.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_grokparsefailure"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+</div>
+
+<p>These were logs that failed parsing and were actually web traffic hitting the server, not XRootD stash operations. They lacked key transform fields like <code class="language-plaintext highlighter-rouge">logical_dirname</code>, <code class="language-plaintext highlighter-rouge">filesize</code>, and <code class="language-plaintext highlighter-rouge">server</code>.</p>
+
+<p>When the transform encountered enough of these records, grouping keys became <code class="language-plaintext highlighter-rouge">null</code>. Combined with malformed or very long field values, the composite aggregation became unstable and hit timeouts.</p>
+
+<h3 id="3-precision-for-petabyte-scale-data">3. Precision for PetaByte-Scale Data</h3>
+
+<p>Not a crash cause, but still important: <code class="language-plaintext highlighter-rouge">float</code> is not precise enough for large sums at petabyte scale.</p>
+
+<p>Solution: use <code class="language-plaintext highlighter-rouge">double</code> for sums/averages and <code class="language-plaintext highlighter-rouge">long</code> for counts.</p>
+
+<h2 id="the-ultimate-solution-resilience-and-precision">The Ultimate Solution: Resilience and Precision</h2>
+
+<p>The final, robust fix used multiple changes together.</p>
+
+<h3 id="1-stop-and-delete-stale-state">1. Stop and Delete Stale State</h3>
+
+<p>Stop the transform and delete the target index to clear bad transform/index state.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">POST</span><span class="w"> </span><span class="err">_plugins/_transform/osdf-summary</span><span class="mi">-2022</span><span class="err">/_stop</span><span class="w">
+</span><span class="err">DELETE</span><span class="w"> </span><span class="err">osdf-summary</span><span class="mi">-2022</span><span class="w">
+</span></code></pre></div>
+</div>
+
+<h3 id="2-recreate-index-with-explicit-high-precision-mappings">2. Recreate Index with Explicit High-Precision Mappings</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">PUT</span><span class="w"> </span><span class="err">osdf-summary</span><span class="mi">-2022</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"mappings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"@timestamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"dirname1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"logical_dirname"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"filesize_sum"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"double"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"filesize_avg"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"double"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"filesize_count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long"</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"doc_count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long"</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+</div>
+
+<h3 id="3-add-intelligent-filtering-in-data_selection_query">3. Add Intelligent Filtering in <code class="language-plaintext highlighter-rouge">data_selection_query</code></h3>
+
+<ul>
+  <li>Exclude <code class="language-plaintext highlighter-rouge">_grokparsefailure</code> events.</li>
+  <li>Require existence of critical grouping fields.</li>
+  <li>Add script guards against empty or oversized keyword values.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"data_selection_query"</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s">"bool"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">"must"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s">"range"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">"@timestamp"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"gte"</span><span class="p">:</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s">-01-01T00:00:00Z"</span><span class="p">,</span>
+            <span class="s">"lt"</span><span class="p">:</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s">-01-01T00:00:00Z"</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">"must_not"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="s">"term"</span><span class="p">:</span> <span class="p">{</span> <span class="s">"tags"</span><span class="p">:</span> <span class="s">"_grokparsefailure"</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">"filter"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="s">"exists"</span><span class="p">:</span> <span class="p">{</span> <span class="s">"field"</span><span class="p">:</span> <span class="s">"logical_dirname.keyword"</span> <span class="p">}</span> <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="s">"script"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">"script"</span><span class="p">:</span> <span class="s">"doc['logical_dirname.keyword'].size() &gt; 0 &amp;&amp; doc['logical_dirname.keyword'].value.length() &lt; 1000"</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+
+<h3 id="4-reduce-page_size">4. Reduce <code class="language-plaintext highlighter-rouge">page_size</code></h3>
+
+<p>Lowering <code class="language-plaintext highlighter-rouge">page_size</code> from <code class="language-plaintext highlighter-rouge">1000</code> to <code class="language-plaintext highlighter-rouge">50</code> significantly reduced memory pressure per composite aggregation page and helped avoid <code class="language-plaintext highlighter-rouge">502 Bad Gateway</code> failures.</p>
+
+<h3 id="5-restart-the-transform">5. Restart the Transform</h3>
+
+<p>After recreating the index and updating the transform definition, restart the job.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>By combining explicit mappings, stronger filtering, smaller pagination, and a reset of stale transform state, the transform ran reliably and produced accurate summaries without repeated failure loops.</p>
+
+<p>This debugging story reinforced a key lesson: robust pipelines are not just about handling valid data, but actively excluding invalid or malformed records before they poison downstream aggregation logic.</p>]]></content><author><name>Derek Weitzel&apos;s Blog</name></author><category term="dweitzel" /><summary type="html"><![CDATA[Debugging OpenSearch Transform jobs can feel like searching for a needle in a haystack, especially when the error messages are generic. This post chronicles a recent debugging journey, highlighting common pitfalls and the ultimate solution to a persistently failing transform job.]]></summary></entry><entry><title type="html">HPC in an AI world- swimming upstream with more conviction</title><link href="https://hpc.social/personal-blog/2026/hpc-in-an-ai-world-swimming-upstream-with-more-conviction/" rel="alternate" type="text/html" title="HPC in an AI world- swimming upstream with more conviction" /><published>2026-02-07T22:11:00-07:00</published><updated>2026-02-07T22:11:00-07:00</updated><id>https://hpc.social/personal-blog/2026/hpc-in-an-ai-world-swimming-upstream-with-more-conviction</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/hpc-in-an-ai-world-swimming-upstream-with-more-conviction/"><![CDATA[<p>Dan Reed recently published an essay, <a href="https://hpcdan.org/2026/02/06/hpc-in-an-ai-world/">HPC In An AI
+World</a>, that summarizes a longer-form statement piece he co-authored
+with Jack Dongarra and Dennis Gannon called <a href="https://hpcdan.org/wp-content/uploads/2026/01/Ride-The-Wave-Build-The-Future.pdf">Ride the Wave, Build the Future: Scientific Computing in an AI World</a>. It's worth a read since, as with
+much of Dr. Reed's writing, it takes a necessary, hard look at where
+the HPC community needs to look as the world underneath it shifts as a
+result of the massive market forces driving AI.</p>
+<p>This is a topic about which I've written at length in the past on my
+blog, and as I read Dr. Reed's latest post (and the Riding the Wave paper that
+motivated it), I found myself agreeing with a many of his positions but
+disagreeing with some others.</p>
+<p>My own background is in the world at the center of Dr. Reed's
+writing: traditional HPC for scientific computing at the national scale.
+However, my outlook has also been colored by the years I spent at
+Microsoft supporting massive-scale supercomputing infrastructure for
+training frontier models and the days I now spend at VAST, steeped in
+the wider enterprise AI market. This undoubtedly results in an unusual lens through which I now view Dr. Reed's position, and I couldn't
+help but mark up his essay with my own notes as I read through it.</p>
+<p>In the event that my perspective--that of an HPC-turned-AI
+infrastructure practitioner--is of interest to anyone who found Dr.
+Reed's latest essay as engaging as I did, I've shared them below.</p>
+<div class="separator" style="clear: both; display: none; text-align: center;"></div>
+<blockquote>
+<p><b>New Maxim Two: Energy and data movement, not floating point
+operations, are the scarce resources.</b></p>
+</blockquote>
+<p>This has been true long before exascale in the HPC world. This is not
+a new maxim. Ironically, it is in the AI world that this maxim is
+relatively new; as inference overtakes training as the predominant
+consumer of GPU cycles, we are seeing widespread shortages of DRAM
+because of the extreme demand for HBM and the memory bandwidth it
+provides.</p>
+<blockquote>
+<p><b>New Maxim Three: Benchmarks are mirrors, not
+levers. Benchmarks rarely drive technical change. Instead,
+they are snapshots of past and current reality, highlighting progress
+(or the lack thereof), but they have little power to influence strategic
+directions.</b></p>
+</blockquote>
+<p>Benchmarks drive technical change amongst technology providers who
+act without conviction. The tech industry is full of companies who are
+blindly chasing consumer demand, and these companies design entire
+product lines to achieve high benchmark results with the mistaken belief
+that those benchmarks are a reasonable proxy for actual productivity.
+And even worse, many buyers (especially in lower-sophistication markets
+like enterprise) also believe that benchmarks, by virtue of being
+designed by community organizations who have ostensibly thought deeply
+about performance, are a good proxy for productivity, make purchasing
+decisions around these same benchmarks.</p>
+<p>The net result is that a bad set of benchmarks can create and sustain
+an entire economy of buyers and sellers who think they are buying and
+selling something useful, when in fact they are wasting resources (time,
+energy, and COGS) because none of them actually understand what really
+drives productivity within their organizations.</p>
+<p>Fortunately, the HPC community is generally savvier than enterprises,
+and most national computing centers now recognize that HPL is simply not
+a meaningful yardstick. While it used to be good for convincing
+politicians and other non-technical funders that good work was being
+  done, the discourse around AI has squarely put R<sub>max</sub> in the ground as a
+meaningful metric. Politicians now understand "hundreds of thousands of
+GPUs" or "gigawatts," neither of which require a benchmark like HPL to
+prove.</p>
+<p>Also, as an aside, I find it ironic that a paper with Jack Dongarra
+listed as an author is now saying HPL is a snapshot of the past. I've
+heard that he is the reason that HPL results achieved using emulated
+FP64 are not allowed on Top500. Despite achieving the required residuals
+through more innovative means than simply brute-forcing a problem
+through FP64 ALUs, using techniques like the Ozaki scheme were deemed
+incompatible with the purpose of Top500. Which is to say, I think he's
+the reason why HPL and Top500 has been reduced to a benchmark that
+reflects outputs (hardware FP64 throughput) rather than outcomes
+(solving a system of equations using LU decomposition).</p>
+<blockquote>
+<p><b>New Maxim Four: Winning systems are co-designed
+end-to-end—workflow first, parts list second.</b></p>
+<p><b>…</b></p>
+<p><b>In HPC, we must pivot to funding sustained co-design ecosystems that
+bet on specific, high-impact scientific workflows</b></p>
+</blockquote>
+<p>I don't agree with this. Funding sustained co-design is just swimming
+upstream with more conviction.</p>
+<p>The real way forward is to find ways to align scientific discovery
+with the way the technology landscape is moving. This means truly riding
+the wave and accepting that scientific discovery may have to turn to
+completely different techniques that achieve their desired precision and
+validation through means that may render obsolete the skills and
+expertise some people have spent their careers developing.</p>
+<p>Consider the scaffolding of end-to-end workflow automation; a rich
+ecosystem of technologies exists in the enterprise and hyperscale worlds
+that have been used to build extreme-scale, globally distributed,
+resilient, observable, and high-performance workflows that combine
+ultra-scalable analytics engines with exascale data warehouses. However,
+realizing these capabilities in practice requires fundamentally
+rethinking the software infrastructure on which everything is built. The
+rigidities of Slurm and the inherent insecurities of relying on ACL- and
+kernel-based authentication and authorization need to be abandoned, or
+at least understood to be critically limiting factors that the HPC
+community chains itself to.</p>
+<p>To make this very specific, consider a bulk-synchronous MPI job
+running across a hundred thousand GPUs; if one node fails, the whole job
+fails. The "swimming upstream with more conviction" way of solving this
+problem is to pay a storage company to build a faster file system, pay
+some researchers to develop a domain-specific checkpoint library that
+glues the MPI application to platform-specific APIs, and pay SchedMD to
+automate fast restart based on these two enhancements. Fund all three
+projects under the same program, and it is arguably a "co-designed
+end-to-end workflow."</p>
+<p>Riding the wave would be something different though: instead of
+requiring a job requeue and full restart from checkpoint upon job
+failure, treat the entire job as an end-to-end workflow. If a node
+fails, the job doesn't stop; it just transitions into a recovery state,
+where the orchestrator gives it a new node on which the job runtime can
+rebuild the state of the dead node using distributed parity or
+domain-specific knowledge. A fast file system is completely unnecessary
+for failure recovery. But the application developers would have to
+abandon the model of an application being a single process invocation in
+favor of the application being a system whose state evolves with the
+underlying hardware.</p>
+<p>Slurm can't do any of this, because Slurm is tied to the MPI model of
+parallel execution which assumes nothing ever fails. Which is to say, I
+think co-design should be deferred until a time that the HPC community
+first recognizes that, so long as they continue to approach end-to-end
+co-design as an HPC problem to be solved by HPC people using HPC approaches, they will continue
+to swim upstream regardless of how much co-design they do.</p>
+<blockquote>
+<p><b>New Maxim Five: Research requires prototyping at
+scale (and risking failure), otherwise it is procurement.
+A variant of our 2023 maxim, prototyping – testing new and novel ideas –
+means accepting the risk of failure, otherwise it is simply incremental
+development. Implicit in the notion of prototyping is the need to test
+multiple ideas, then harvest the ones with promise. Remember, a
+prototype that cannot fail has another name – it’s called a product.</b></p>
+</blockquote>
+<p>The idea is right, but the title is wrong. Prototyping at scale is
+the wrong way to think about developing leadership supercomputing capability. The largest
+commercial AI infrastructure providers do not prototype at scale. Instead,
+they frame their thinking differently: anything done at scale is
+production, and if it doesn't work, make it work.</p>
+<p>In practice, this means foregoing <a href="https://cdn.lanl.gov/files/ats-5-rfp-sept2024_d80e2.pdf#page=55">years-long acceptance test processes</a>
+and beating up suppliers over hundred-page-long statements of work.
+Instead, they accept the reality that they share the responsibility of
+integration with their suppliers, and if things go sideways, they are
+working with partners who will not walk away when times get tough.</p>
+<p>National-scale supercomputing has always been this way in practice,
+but the HPC community likes to pretend that it isn't. Consider Aurora:
+if that system wasn't a prototype-at-scale, I don't know what is. That
+system's <a href="https://www.tomshardware.com/news/us-governments-aurora-supercomputer-delayed-due-to-intels-7nm-setback">deployment and operations was and remains fraught</a>, and it is
+built on processors and nodes that <a href="https://www.servethehome.com/intel-ponte-vecchio-spaceship-gpu-no-longer-hunting-new-clusters/">were cancelled as products</a> <a href="https://www.alcf.anl.gov/news/argonne-releases-aurora-exascale-supercomputer-researchers">before the system even entered production</a>. Yet the theatrics of acceptance testing
+went on, Intel got paid something, and we all pretend like Aurora just
+like Frontier or Perlmutter.</p>
+<p>AI doesn’t prototype at scale; they just take a risk because the next
+breakthrough can't wait for every "i" to be dotted and "t" to be
+crossed. If a hyperscale AI system is a failure, that’s fine. The demand
+for FLOPS is sufficiently high that it will be utilized by someone for
+something, even if that use generates low-value results rather than the
+next frontier model that it was meant to build. The same is true for
+systems like Aurora; it's not like these systems sit idle, even if they
+don't live up to their original vision.</p>
+<p>And rest assured, AI systems prove to be bad ideas just like HPC
+systems do. The difference is scale: there are multi-billion-dollar AI
+supercomputers in existence that were obsolete before they even came
+online, because the problem they were designed to solve became
+irrelevant in the years it took to build them. But what was really lost?
+A bit of money and a little time. The GPUs are still used for day-to-day R&amp;D or inferencing, and the time lost was made up for in
+lessons learned for the systems that followed.</p>
+<p>All the big AI systems are prototypes, because AI
+workloads themselves are continually evolving prototypes. As a result, the line between prototype and production become blurry, if not
+meaningless.</p>
+<blockquote>
+<p><b>All too often, in scientific computing, our gold is buried
+in disparate, multi-disciplinary datasets. This needs to change; we must
+build sustainable, multidisciplinary data fusion.</b></p>
+</blockquote>
+<p>This is so easy to say, but it always feels empty when it is said.
+What’s stopping this data fusion? I don’t think it’s willpower or
+resources. It’s just really difficult to figure out what good any of it
+would be within a standard theory-based modeling framework. Making
+productive use of fused multimodal data (meshes, particles, and discrete
+observations, for example) requires multimodal, multiphysics models. And
+such models are really expensive relative to the insights they
+deliver.</p>
+<p>To me, this means the challenge isn't in getting the world's
+scientific data to hold hands and sing kumbaya; it's accepting that
+there's limited value in actually doing this data fusion unless you're
+willing to also take on more approximations within the models that use
+them so that the net return--science per dollar--comes out as a net
+positive over today's physics-based, single-mode scientific models.</p>
+<p>The AI community accepts that wholly empirical models are much less
+interpretable but can much more readily turn multimodal data into
+results in a meaningfully faster, most resource-efficient way. for
+example the <a href="https://www.microsoft.com/en-us/research/project/aurora-forecasting/">Aurora model</a> and how it took <a href="https://arxiv.org/html/2405.13063v2">all sorts of disparate climate datasets</a> to develop an incredibly efficient forecasting tool. In a
+minute on a single GPU, it produces forecasts of comparable quality to
+what would take hours across multiple GPUs using a physics-based model.
+And it achieves this efficiency by having trained on a diverse
+collection of gridded 3D atmosphere data and tabular data that was
+fused.</p>
+<p>The only problem, of course, is that the model is much less
+interpretable than a physics-based model. If the Aurora model's forecast
+is off, forecasters mostly have to shrug and move on with life. But for
+the purposes of solving the scientific problem at hand (predicting the
+weather a few days out), that may be good enough.</p>
+<blockquote>
+<p><b>Governments must now treat advanced computing as a strategic
+utility, requiring a scale of coordination and investment that rivals
+the <a href="https://en.wikipedia.org/wiki/Manhattan_Project">Manhattan
+Project</a> or the <a href="https://en.wikipedia.org/wiki/Apollo_program">Apollo
+program</a>.</b></p>
+</blockquote>
+<p>Manhattan Project and the Apollo mission had distinct goals with a
+defined "lump of work" required to achieve them. They are not
+comparable. Computing is a commodity, and it’s a far fairer comparison
+to liken it to oil or gas reserves. And even then, exactly what good are
+these computing reserves or capabilities really? Is it one big
+supercomputer, or many small ones? What are the range of problems that
+such a strategic utility would be called upon to solve?</p>
+<p>In the AI game, advanced computing is certainly a pillar of
+competitiveness, but it is not necessarily the most limiting one.
+DeepSeek showed us that ingenuity and massive computing are two
+orthogonal axes towards developing new capabilities. They showed that,
+although you can spend a ton of money on GPUs to train a new frontier
+model, you can also be a lot more clever about how you use much fewer
+GPUs to do the same thing. And the ratio of people to capital that
+resulted in DeepSeek-R1 arguably showed that investing in innovation,
+not just datacenter buildout, has a much higher return on
+investment.</p>
+<p>In the context of the above statement, I think governments would do
+far better to treat its innovators as a strategic asset and worry less
+about issuing press releases that lead with how many thousands of GPUs
+they will deploy. For every thousand GPUs to be deployed on government
+land in the US this year, how many government researchers, architects,
+and visionaries have headed out the door and are never coming back?</p>]]></content><author><name>Glenn K. Lockwood&apos;s Blog</name></author><category term="glennklockwood" /><summary type="html"><![CDATA[Dan Reed recently published an essay, HPC In An AI World, that summarizes a longer-form statement piece he co-authored with Jack Dongarra and Dennis Gannon called Ride the Wave, Build the Future: Scientific Computing in an AI World. It's worth a read since, as with much of Dr. Reed's writing, it takes a necessary, hard look at where the HPC community needs to look as the world underneath it shifts as a result of the massive market forces driving AI. This is a topic about which I've written at length in the past on my blog, and as I read Dr. Reed's latest post (and the Riding the Wave paper that motivated it), I found myself agreeing with a many of his positions but disagreeing with some others. My own background is in the world at the center of Dr. Reed's writing: traditional HPC for scientific computing at the national scale. However, my outlook has also been colored by the years I spent at Microsoft supporting massive-scale supercomputing infrastructure for training frontier models and the days I now spend at VAST, steeped in the wider enterprise AI market. This undoubtedly results in an unusual lens through which I now view Dr. Reed's position, and I couldn't help but mark up his essay with my own notes as I read through it. In the event that my perspective--that of an HPC-turned-AI infrastructure practitioner--is of interest to anyone who found Dr. Reed's latest essay as engaging as I did, I've shared them below. New Maxim Two: Energy and data movement, not floating point operations, are the scarce resources. This has been true long before exascale in the HPC world. This is not a new maxim. Ironically, it is in the AI world that this maxim is relatively new; as inference overtakes training as the predominant consumer of GPU cycles, we are seeing widespread shortages of DRAM because of the extreme demand for HBM and the memory bandwidth it provides. New Maxim Three: Benchmarks are mirrors, not levers. Benchmarks rarely drive technical change. Instead, they are snapshots of past and current reality, highlighting progress (or the lack thereof), but they have little power to influence strategic directions. Benchmarks drive technical change amongst technology providers who act without conviction. The tech industry is full of companies who are blindly chasing consumer demand, and these companies design entire product lines to achieve high benchmark results with the mistaken belief that those benchmarks are a reasonable proxy for actual productivity. And even worse, many buyers (especially in lower-sophistication markets like enterprise) also believe that benchmarks, by virtue of being designed by community organizations who have ostensibly thought deeply about performance, are a good proxy for productivity, make purchasing decisions around these same benchmarks. The net result is that a bad set of benchmarks can create and sustain an entire economy of buyers and sellers who think they are buying and selling something useful, when in fact they are wasting resources (time, energy, and COGS) because none of them actually understand what really drives productivity within their organizations. Fortunately, the HPC community is generally savvier than enterprises, and most national computing centers now recognize that HPL is simply not a meaningful yardstick. While it used to be good for convincing politicians and other non-technical funders that good work was being done, the discourse around AI has squarely put Rmax in the ground as a meaningful metric. Politicians now understand "hundreds of thousands of GPUs" or "gigawatts," neither of which require a benchmark like HPL to prove. Also, as an aside, I find it ironic that a paper with Jack Dongarra listed as an author is now saying HPL is a snapshot of the past. I've heard that he is the reason that HPL results achieved using emulated FP64 are not allowed on Top500. Despite achieving the required residuals through more innovative means than simply brute-forcing a problem through FP64 ALUs, using techniques like the Ozaki scheme were deemed incompatible with the purpose of Top500. Which is to say, I think he's the reason why HPL and Top500 has been reduced to a benchmark that reflects outputs (hardware FP64 throughput) rather than outcomes (solving a system of equations using LU decomposition). New Maxim Four: Winning systems are co-designed end-to-end—workflow first, parts list second. … In HPC, we must pivot to funding sustained co-design ecosystems that bet on specific, high-impact scientific workflows I don't agree with this. Funding sustained co-design is just swimming upstream with more conviction. The real way forward is to find ways to align scientific discovery with the way the technology landscape is moving. This means truly riding the wave and accepting that scientific discovery may have to turn to completely different techniques that achieve their desired precision and validation through means that may render obsolete the skills and expertise some people have spent their careers developing. Consider the scaffolding of end-to-end workflow automation; a rich ecosystem of technologies exists in the enterprise and hyperscale worlds that have been used to build extreme-scale, globally distributed, resilient, observable, and high-performance workflows that combine ultra-scalable analytics engines with exascale data warehouses. However, realizing these capabilities in practice requires fundamentally rethinking the software infrastructure on which everything is built. The rigidities of Slurm and the inherent insecurities of relying on ACL- and kernel-based authentication and authorization need to be abandoned, or at least understood to be critically limiting factors that the HPC community chains itself to. To make this very specific, consider a bulk-synchronous MPI job running across a hundred thousand GPUs; if one node fails, the whole job fails. The "swimming upstream with more conviction" way of solving this problem is to pay a storage company to build a faster file system, pay some researchers to develop a domain-specific checkpoint library that glues the MPI application to platform-specific APIs, and pay SchedMD to automate fast restart based on these two enhancements. Fund all three projects under the same program, and it is arguably a "co-designed end-to-end workflow." Riding the wave would be something different though: instead of requiring a job requeue and full restart from checkpoint upon job failure, treat the entire job as an end-to-end workflow. If a node fails, the job doesn't stop; it just transitions into a recovery state, where the orchestrator gives it a new node on which the job runtime can rebuild the state of the dead node using distributed parity or domain-specific knowledge. A fast file system is completely unnecessary for failure recovery. But the application developers would have to abandon the model of an application being a single process invocation in favor of the application being a system whose state evolves with the underlying hardware. Slurm can't do any of this, because Slurm is tied to the MPI model of parallel execution which assumes nothing ever fails. Which is to say, I think co-design should be deferred until a time that the HPC community first recognizes that, so long as they continue to approach end-to-end co-design as an HPC problem to be solved by HPC people using HPC approaches, they will continue to swim upstream regardless of how much co-design they do. New Maxim Five: Research requires prototyping at scale (and risking failure), otherwise it is procurement. A variant of our 2023 maxim, prototyping – testing new and novel ideas – means accepting the risk of failure, otherwise it is simply incremental development. Implicit in the notion of prototyping is the need to test multiple ideas, then harvest the ones with promise. Remember, a prototype that cannot fail has another name – it’s called a product. The idea is right, but the title is wrong. Prototyping at scale is the wrong way to think about developing leadership supercomputing capability. The largest commercial AI infrastructure providers do not prototype at scale. Instead, they frame their thinking differently: anything done at scale is production, and if it doesn't work, make it work. In practice, this means foregoing years-long acceptance test processes and beating up suppliers over hundred-page-long statements of work. Instead, they accept the reality that they share the responsibility of integration with their suppliers, and if things go sideways, they are working with partners who will not walk away when times get tough. National-scale supercomputing has always been this way in practice, but the HPC community likes to pretend that it isn't. Consider Aurora: if that system wasn't a prototype-at-scale, I don't know what is. That system's deployment and operations was and remains fraught, and it is built on processors and nodes that were cancelled as products before the system even entered production. Yet the theatrics of acceptance testing went on, Intel got paid something, and we all pretend like Aurora just like Frontier or Perlmutter. AI doesn’t prototype at scale; they just take a risk because the next breakthrough can't wait for every "i" to be dotted and "t" to be crossed. If a hyperscale AI system is a failure, that’s fine. The demand for FLOPS is sufficiently high that it will be utilized by someone for something, even if that use generates low-value results rather than the next frontier model that it was meant to build. The same is true for systems like Aurora; it's not like these systems sit idle, even if they don't live up to their original vision. And rest assured, AI systems prove to be bad ideas just like HPC systems do. The difference is scale: there are multi-billion-dollar AI supercomputers in existence that were obsolete before they even came online, because the problem they were designed to solve became irrelevant in the years it took to build them. But what was really lost? A bit of money and a little time. The GPUs are still used for day-to-day R&amp;D or inferencing, and the time lost was made up for in lessons learned for the systems that followed. All the big AI systems are prototypes, because AI workloads themselves are continually evolving prototypes. As a result, the line between prototype and production become blurry, if not meaningless. All too often, in scientific computing, our gold is buried in disparate, multi-disciplinary datasets. This needs to change; we must build sustainable, multidisciplinary data fusion. This is so easy to say, but it always feels empty when it is said. What’s stopping this data fusion? I don’t think it’s willpower or resources. It’s just really difficult to figure out what good any of it would be within a standard theory-based modeling framework. Making productive use of fused multimodal data (meshes, particles, and discrete observations, for example) requires multimodal, multiphysics models. And such models are really expensive relative to the insights they deliver. To me, this means the challenge isn't in getting the world's scientific data to hold hands and sing kumbaya; it's accepting that there's limited value in actually doing this data fusion unless you're willing to also take on more approximations within the models that use them so that the net return--science per dollar--comes out as a net positive over today's physics-based, single-mode scientific models. The AI community accepts that wholly empirical models are much less interpretable but can much more readily turn multimodal data into results in a meaningfully faster, most resource-efficient way. for example the Aurora model and how it took all sorts of disparate climate datasets to develop an incredibly efficient forecasting tool. In a minute on a single GPU, it produces forecasts of comparable quality to what would take hours across multiple GPUs using a physics-based model. And it achieves this efficiency by having trained on a diverse collection of gridded 3D atmosphere data and tabular data that was fused. The only problem, of course, is that the model is much less interpretable than a physics-based model. If the Aurora model's forecast is off, forecasters mostly have to shrug and move on with life. But for the purposes of solving the scientific problem at hand (predicting the weather a few days out), that may be good enough. Governments must now treat advanced computing as a strategic utility, requiring a scale of coordination and investment that rivals the Manhattan Project or the Apollo program. Manhattan Project and the Apollo mission had distinct goals with a defined "lump of work" required to achieve them. They are not comparable. Computing is a commodity, and it’s a far fairer comparison to liken it to oil or gas reserves. And even then, exactly what good are these computing reserves or capabilities really? Is it one big supercomputer, or many small ones? What are the range of problems that such a strategic utility would be called upon to solve? In the AI game, advanced computing is certainly a pillar of competitiveness, but it is not necessarily the most limiting one. DeepSeek showed us that ingenuity and massive computing are two orthogonal axes towards developing new capabilities. They showed that, although you can spend a ton of money on GPUs to train a new frontier model, you can also be a lot more clever about how you use much fewer GPUs to do the same thing. And the ratio of people to capital that resulted in DeepSeek-R1 arguably showed that investing in innovation, not just datacenter buildout, has a much higher return on investment. In the context of the above statement, I think governments would do far better to treat its innovators as a strategic asset and worry less about issuing press releases that lead with how many thousands of GPUs they will deploy. For every thousand GPUs to be deployed on government land in the US this year, how many government researchers, architects, and visionaries have headed out the door and are never coming back?]]></summary></entry><entry><title type="html">Who needs full-featured CI and why</title><link href="https://hpc.social/personal-blog/2026/who-needs-full-featured-ci-and-why/" rel="alternate" type="text/html" title="Who needs full-featured CI and why" /><published>2026-02-07T00:38:16-07:00</published><updated>2026-02-07T00:38:16-07:00</updated><id>https://hpc.social/personal-blog/2026/who-needs-full-featured-ci-and-why</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/who-needs-full-featured-ci-and-why/"><![CDATA[<p>Ian Duncan has written a great post on CI orchestration called <em><a href="https://www.iankduncan.com/engineering/2026-02-06-bash-is-not-enough/">No, Really, Bash Is Not Enough: Why Large-Scale CI Needs an Orchestrator</a></em>. It does a good job of distinguishing between the simple cases where bash and make really are good enough for CI, and when you actually need a full-featured CI system.</p>
+
+<p><span id="more-456"></span></p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>I am talking to teams where CI is a load-bearing piece of infrastructure. Teams where 20 or 50 or 200 engineers push code daily. Teams where a broken CI pipeline doesn’t mean one person waits a few extra minutes; it means a queue of pull requests backs up, a deploy window gets missed, and product timelines slip. Teams where CI time is measured in engineering-hours-lost-per-week and has a line item on somebody’s OKRs.</p>
+
+</blockquote>
+
+<p>It also leans heavily on one of my favorite papers, “<a href="https://dl.acm.org/doi/10.1145/3236774">Build systems à la carte</a>” by Mokhov <em>et al</em>. From the discussion of that paper:</p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>The real takeaway is not that bash is bad. It’s that the design space of build systems has&nbsp;<em>structure</em>, and that structure has been studied, and that the properties you care about (minimality, correctness, support for dynamic dependencies, cloud caching, early cutoff) correspond to specific architectural choices that live at a level of abstraction bash cannot express. When you write a build pipeline in bash, you are either implementing one of the twelve cells in the Mokhov-Mitchell-Jones matrix (poorly, by hand, with strings and exit codes), or you are living in the&nbsp;<code>busy</code>&nbsp;cell and rebuilding everything every time.</p>
+
+</blockquote>
+
+<p>It’s a long read but a good one, go check it out.</p>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[Ian Duncan has written a great post on CI orchestration called No, Really, Bash Is Not Enough: Why Large-Scale CI Needs an Orchestrator. It does a good job of distinguishing between the simple cases where bash and make really are good enough for CI, and when you actually need a full-featured CI system.]]></summary></entry><entry><title type="html">Quoting Charity Majors</title><link href="https://hpc.social/personal-blog/2026/quoting-charity-majors/" rel="alternate" type="text/html" title="Quoting Charity Majors" /><published>2026-01-19T17:47:51-07:00</published><updated>2026-01-19T17:47:51-07:00</updated><id>https://hpc.social/personal-blog/2026/quoting-charity-majors</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/quoting-charity-majors/"><![CDATA[<p>Charity’s latest post, <em><a href="https://charity.wtf/2026/01/19/bring-back-ops-pride-xpost/">Bring back ops pride</a></em>, is an excellent discussion (rant?) on the importance of operations for software systems and why it’s a bad idea to try and pretend it isn’t a real concern, or make conventional application teams do the work in addition to their regular job.</p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>“Operations” is not a dirty word, a synonym for toil, or a title for people who can’t write code. May those who shit on ops get the operational outcomes they deserve.</p>
+
+</blockquote>
+
+<p>You should absolutely go read the <a href="https://charity.wtf/2026/01/19/bring-back-ops-pride-xpost/">full piece</a>, as well as Charity’s earlier post on the Honeycomb blog: <em><a href="https://www.honeycomb.io/blog/you-had-one-job-why-twenty-years-of-devops-has-failed-to-do-it">You had one job: Why twenty years of DevOps has failed to do it</a></em>. </p>
+
+<p>Below find several pull quotes from the post itself, because there were just too many to choose from.</p>
+
+<p><span id="more-430"></span></p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>The difference between “dev” and “ops” is not about whether or not you can write code. Dude, it’s 2026:&nbsp;<strong>everyone writes software</strong>.</p>
+
+
+
+
+<p>The difference between dev and ops is a separation of concerns.</p>
+
+</blockquote>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>The hardest technical challenges and the long, stubborn tail of intractable problems have&nbsp;<em>always</em>&nbsp;been on the infrastructure side.&nbsp;<strong>That’s why we work&nbsp;<em>so hard</em>&nbsp;to try not to have them</strong>—to solve them by partnerships, cloud computing, open source, etc.&nbsp;<em>Anything</em>&nbsp;is better than trying to build them again, starting over from scratch. We know the cost of new code in our bones.</p>
+
+
+
+
+<p>As I have said a thousand times: the closer you get to laying bits down on disk, the more conservative (and afraid) you should be.</p>
+
+</blockquote>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>The difference between dev and ops isn’t about writing code or not. But there&nbsp;<em>are</em>&nbsp;differences. In perspective, priorities, and (often) temperament.</p>
+
+
+
+
+<p>I touched on a number of these in&nbsp;<a href="https://www.honeycomb.io/blog/you-had-one-job-why-twenty-years-of-devops-has-failed-to-do-it">the article I just wrote on feedback loops</a>, so I’m not going to repeat myself here.</p>
+
+
+
+
+<p>The biggest difference I did&nbsp;<em>not</em>&nbsp;mention is that they have different relationships with resources and definitions of success.</p>
+
+
+
+
+<p>Infrastructure is a cost center. You aren’t going to make more money if you give ten laptops to everyone in your company, and you aren’t going to make more money by over-spending on infrastructure, either. Great operations engineers and architects never forget that&nbsp;<strong>cost is a first class citizen</strong>&nbsp;of their engineering decisions.</p>
+
+</blockquote>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>Operational rigor and excellence are not, how shall I say this…not yet something you can take for granted in the tech industry. The most striking thing about the 2025 DORA report was that the&nbsp;<em>majority of companies</em>&nbsp;report that AI is just adding more chaos to a system already defined by chaos. In other words, most companies are bad at ops.</p>
+
+</blockquote>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[Charity’s latest post, Bring back ops pride, is an excellent discussion (rant?) on the importance of operations for software systems and why it’s a bad idea to try and pretend it isn’t a real concern, or make conventional application teams do the work in addition to their regular job.]]></summary></entry><entry><title type="html">Quoting Nicholas Carlini</title><link href="https://hpc.social/personal-blog/2026/quoting-nicholas-carlini/" rel="alternate" type="text/html" title="Quoting Nicholas Carlini" /><published>2026-01-18T17:07:12-07:00</published><updated>2026-01-18T17:07:12-07:00</updated><id>https://hpc.social/personal-blog/2026/quoting-nicholas-carlini</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/quoting-nicholas-carlini/"><![CDATA[<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>Because when the people training these models justify why they&#8217;re worth it, they appeal to pretty extreme outcomes. When Dario Amodei wrote his essay&nbsp;<a href="https://www.darioamodei.com/essay/machines-of-loving-grace">Machines of Loving Grace</a>, he wrote that he sees the benefits as being extraordinary: &#8220;Reliable prevention and treatment of nearly all natural infectious disease &#8230; Elimination of most cancer &#8230; Prevention of Alzheimer’s &#8230; Improved treatment of most other ailments &#8230; Doubling of the human lifespan.&#8221; These are the benefits that the CEO of Anthropic uses to justify his belief that LLMs are worth it. If you think that these risks sound fanciful, then I might encourage you to consider what benefits you see LLMs as bringing, and then consider if you think the risks&nbsp;are worth it.</p>
+
+</blockquote>
+
+<p>From Carlini’s recent talk/article on <em><a href="https://nicholas.carlini.com/writing/2025/are-llms-worth-it.html">Are large language models worth it?</a></em></p>
+
+<p>The entire article is well worth reading, but I was struck by this bit near the end. LLM researchers often dismiss (some of) the risks of these models as fanciful. But many of the benefits touted by the labs sound just as fanciful!</p>
+
+<p>When we’re evaluating the worth of this research, it’s a good idea to be consistent about how realistic — or how “galaxy brain” — you want to be, with both risks and benefits.</p>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[Because when the people training these models justify why they&#8217;re worth it, they appeal to pretty extreme outcomes. When Dario Amodei wrote his essay&nbsp;Machines of Loving Grace, he wrote that he sees the benefits as being extraordinary: &#8220;Reliable prevention and treatment of nearly all natural infectious disease &#8230; Elimination of most cancer &#8230; Prevention of Alzheimer’s &#8230; Improved treatment of most other ailments &#8230; Doubling of the human lifespan.&#8221; These are the benefits that the CEO of Anthropic uses to justify his belief that LLMs are worth it. If you think that these risks sound fanciful, then I might encourage you to consider what benefits you see LLMs as bringing, and then consider if you think the risks&nbsp;are worth it.]]></summary></entry><entry><title type="html">Robin Sloan- AGI is already here!</title><link href="https://hpc.social/personal-blog/2026/robin-sloan-agi-is-already-here/" rel="alternate" type="text/html" title="Robin Sloan- AGI is already here!" /><published>2026-01-18T16:50:37-07:00</published><updated>2026-01-18T16:50:37-07:00</updated><id>https://hpc.social/personal-blog/2026/robin-sloan-agi-is-already-here-</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/robin-sloan-agi-is-already-here/"><![CDATA[<p>In Robin Sloan’s “pop-up newsletter” <em>Winter Garden</em>, <a href="https://www.robinsloan.com/winter-garden/agi-is-here/">he argues that artificial general intelligence has been with us since the development of GPT-3</a>:</p>
+
+<p><span id="more-419"></span></p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>The trick is to read plainly.</p>
+
+
+
+
+<p>The key word in Artificial General Intelligence is General. That’s the word that makes this AI unlike every other AI: because every other AI was trained for a particular purpose and, &amp; even if it achieved it in spectacular fashion, did not do anything else. Consider landmark models across the decades: the Mark I&nbsp;Perceptron, LeNet, AlexNet, AlphaGo, AlphaFold … these systems were all different, but all alike in this way.</p>
+
+
+
+
+<p>Language models were trained for a purpose, too … but, surprise: the mechanism &amp; scale of that training did something new: opened a wormhole, through which a vast field of action &amp; response could be reached. Towering libraries of human writing, drawn together across time &amp; space, all the dumb reasons for it … that’s rich fuel, if you can hold it all in your head.</p>
+
+
+
+
+<p>It’s important to emphasize that the open-ended capability of these big models was a genuine surprise, even to their custodians. Once understood, the opportunity was quickly grasped … but the magnitude of that initial whoa?! is still ringing the bell of this century.</p>
+
+
+
+
+<p>I’m extreme in this regard: I&nbsp;think 2020’s <a href="https://arxiv.org/abs/2005.14165?utm_source=Robin_Sloan_sent_me">Language Models are Few-Shot Learners</a> marks the AGI moment. In that paper, OpenAI researchers demonstrated that GPT-3 — at that time, the biggest model of its kind ever trained — performed better on a wide range of linguistic tasks than models trained for those tasks specifically. A more direct title might have been: This Thing Can Do It All?!</p>
+
+</blockquote>
+
+<p>“AGI” is such a misused, ill-defined term that I honestly don’t find it too useful… but it’s hard to argue with Sloan’s argument here! Certainly if you showed current LLMs to someone from 20 years ago, or even 10, they’d seem like wild science fiction.</p>
+
+<p>It also reminds me of a quote from Asimov on the definition of “artificial intelligence” and how the goal posts move as new achievements are retrospectively deemed as “not AI”:</p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>[artificial intelligence is] a phrase that we use for any device that does things which, in the past, we have associated only with human intelligence</p>
+
+</blockquote>
+
+<p>(via <a href="https://nicholas.carlini.com/writing/2025/are-llms-worth-it.html">Nicholas Carlini</a>)</p>
+
+<p>So. Do we have AGI? Do we even meaningfully have AI? What would we have to see for the general consensus to agree they had been achieved?</p>
+
+<p>Anyway, they are mostly marketing terms at this point. But it can still be interesting to think about them.</p>
+
+<hr class="wp-block-separator has-alpha-channel-opacity" />
+
+<p>Thoughts from a dog walk listening to the Sloan article using ElevenReader.</p>
+
+<figure class="wp-block-image size-large"><img class="wp-image-421" height="768" src="https://thinking.ajdecon.org/wp-content/uploads/2026/01/img_3019-1024x768.jpg" width="1024" /><figcaption class="wp-element-caption">Benny is unimpressed with being asked to pose during his walk</figcaption></figure>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[In Robin Sloan’s “pop-up newsletter” Winter Garden, he argues that artificial general intelligence has been with us since the development of GPT-3:]]></summary></entry><entry><title type="html">tailscale</title><link href="https://hpc.social/personal-blog/2026/tailscale/" rel="alternate" type="text/html" title="tailscale" /><published>2026-01-12T05:13:12-07:00</published><updated>2026-01-12T05:13:12-07:00</updated><id>https://hpc.social/personal-blog/2026/tailscale</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/tailscale/"><![CDATA[<p><a href="https://bsky.app/profile/buttplug.engineer/post/3mc6qyarp2c2m">Some discussion on bsky</a> of the usefulness of Tailscale, and I’ll just note here how very handy it is for running a personal homelab that includes cloud instances. As well as just having lab connectivity from a laptop or phone on the go!</p>
+
+<p>Services I run over Tailscale, just for myself, include:</p>
+
+<ul class="wp-block-list">
+<li>An RSS feed reader</li>
+
+
+
+<li>A personal git forge</li>
+
+
+
+<li>An IRC bouncer</li>
+
+
+
+<li>A (poorly maintained) wiki</li>
+
+
+
+<li>JupyterLab</li>
+
+
+
+<li>Open WebUI for playing with local LLMs on a GPU workstation</li>
+
+
+
+<li>SSH to a powerful workstation, hosted at home but without complex configs</li>
+</ul>
+
+<p>And probably a few things I’ve forgotten! It’s really just very neat. Sure I could do it all with manual Wireguard configs. But Tailscale just makes the underlying primitive much more ergonomic.</p>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[Some discussion on bsky of the usefulness of Tailscale, and I’ll just note here how very handy it is for running a personal homelab that includes cloud instances. As well as just having lab connectivity from a laptop or phone on the go!]]></summary></entry><entry><title type="html">Quoting antirez on AI</title><link href="https://hpc.social/personal-blog/2026/quoting-antirez-on-ai/" rel="alternate" type="text/html" title="Quoting antirez on AI" /><published>2026-01-12T03:44:08-07:00</published><updated>2026-01-12T03:44:08-07:00</updated><id>https://hpc.social/personal-blog/2026/quoting-antirez-on-ai</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/quoting-antirez-on-ai/"><![CDATA[<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<pre class="wp-block-preformatted">Anyway, back to programming. I have a single suggestion for you, my friend. Whatever you believe about what the Right Thing should be, you can't control it by refusing what is happening right now. Skipping AI is not going to help you or your career. Think about it. Test these new tools, with care, with weeks of work, not in a five minutes test where you can just reinforce your own beliefs. Find a way to multiply yourself, and if it does not work for you, try again every few months.<br /><br />Yes, maybe you think that you worked so hard to learn coding, and now machines are doing it for you. But what was the fire inside you, when you coded till night to see your project working? It was building. And now you can build more and better, if you find your way to use AI effectively. The fun is still there, untouched</pre>
+</blockquote>
+
+<p>From <em><a href="https://antirez.com/news/158">Don’t fall into the anti-AI hype</a></em></p>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[Anyway, back to programming. I have a single suggestion for you, my friend. Whatever you believe about what the Right Thing should be, you can't control it by refusing what is happening right now. Skipping AI is not going to help you or your career. Think about it. Test these new tools, with care, with weeks of work, not in a five minutes test where you can just reinforce your own beliefs. Find a way to multiply yourself, and if it does not work for you, try again every few months.Yes, maybe you think that you worked so hard to learn coding, and now machines are doing it for you. But what was the fire inside you, when you coded till night to see your project working? It was building. And now you can build more and better, if you find your way to use AI effectively. The fun is still there, untouched]]></summary></entry><entry><title type="html">Latency-critical Linux task scheduling for gaming</title><link href="https://hpc.social/personal-blog/2026/latency-critical-linux-task-scheduling-for-gaming/" rel="alternate" type="text/html" title="Latency-critical Linux task scheduling for gaming" /><published>2026-01-10T17:26:29-07:00</published><updated>2026-01-10T17:26:29-07:00</updated><id>https://hpc.social/personal-blog/2026/latency-critical-linux-task-scheduling-for-gaming</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/latency-critical-linux-task-scheduling-for-gaming/"><![CDATA[<p><em><a href="https://lwn.net/Articles/1051430/">LWN</a></em> has an excellent article up on the “latency-criticality aware virtual deadline” (LAVD) scheduler, from a talk at the <em>Linux Plumbers Conference</em> in December.</p>
+
+<p>In particular, I appreciate the detailed discussion of using different profilers and performance-analysis tools at different levels to determine how to optimize scheduling to improve two key goals: providing high average FPS while keeping 99th-percentile FPS as low as possible, e.g. to prevent UI stuttering. Optimizing for battery usage is also important, as the Steam Deck was one of the main targets for this work.</p>
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p>The key finding that came out of his analysis is perhaps somewhat obvious: a single high-level action, such as moving a character on-screen and emitting a sound based on a key-press event, requires that many tasks work together. Some of the tasks are threads in the game process, but others are not because they are in the game engine, kernel, and device drivers; there are often 20 or 30 tasks in a chain that all need to collaborate. Finding tasks with a high waker or wakee frequency and prioritizing them is the basis of the LAVD scheduling policy.</p>
+
+</blockquote>
+
+<p>As always with <em>LWN</em> there’s good coverage not only of the talk itself, but also the Q&amp;A following the session and ideas from the audience on tooling and other improvements.</p>
+
+<p><em><a href="https://www.phoronix.com/news/Meta-SCX-LAVD-Steam-Deck-Server">Phoronix</a></em> also covered a different talk from the same conference (I think) on how Meta is using the LAVD scheduler as the basis for a new default scheduler used on their fleet. </p>
+
+<p>I haven’t had a chance to watch this talk yet (<a href="https://youtu.be/KFItEHbFEwg?si=62Hsyr9ydHcOVu9b">video</a> linked from the article) but I’m very interested in the idea that the same concepts might be useful to a hyper scaler as well as a device like a Steam Deck.</p>]]></content><author><name>Thinking Out Loud</name></author><category term="ajdecon" /><summary type="html"><![CDATA[LWN has an excellent article up on the “latency-criticality aware virtual deadline” (LAVD) scheduler, from a talk at the Linux Plumbers Conference in December.]]></summary></entry><entry><title type="html">Orchestrating Hybrid Quantum–Classical Workflows with IBM LSF- Inside the SQD Workflow Demo at SC25</title><link href="https://hpc.social/personal-blog/2026/orchestrating-hybrid-quantum-classical-workflows-with-ibm-lsf-inside-the-sqd-workflow-demo-at-sc25/" rel="alternate" type="text/html" title="Orchestrating Hybrid Quantum–Classical Workflows with IBM LSF- Inside the SQD Workflow Demo at SC25" /><published>2026-01-08T14:22:59-07:00</published><updated>2026-01-08T14:22:59-07:00</updated><id>https://hpc.social/personal-blog/2026/orchestrating-hybrid-quantum-classical-workflows-with-ibm-lsf-inside-the-sqd-workflow-demo-at-sc25</id><content type="html" xml:base="https://hpc.social/personal-blog/2026/orchestrating-hybrid-quantum-classical-workflows-with-ibm-lsf-inside-the-sqd-workflow-demo-at-sc25/"><![CDATA[<p>As we enter 2026, it seems that SC25 is far off in our rearview mirror. But it&rsquo;s only been a bit over a month since the HPC world converged on St. Louis, Missouri for the annual <a href="https://sc25.supercomputing.org/">Supercomputing 2025</a> (SC25) event. SC25 signaled one emerging trend: the exploration of hybrid workflows combining quantum and classical computing, offering a look at how these technologies can work synergistically over time. This was indeed the main topic of the 1st Annual Workshop on Large-Scale Quantum-Classical Computing, a workshop which I found to be very insightful.</p>
+
+<p>At the IBM booth, we showcased how <a href="https://www.ibm.com/products/hpc-workload-management">IBM LSF</a> can schedule and orchestrate a hybrid quantum–classical workflow across IBM Quantum systems and classical x86 compute.  The demo featured the Sample-based Quantum Diagonalization (SQD) workflow, to estimate the ground-state energy of a Hamiltonian representing a molecular system. SQD is part of the <a href="https://quantum.cloud.ibm.com/docs/en/guides/qiskit-addons-sqd">IBM Qiskit add-ons</a>.</p>
+
+<p>Before diving into the details on what was demonstrated at SC25, and how LSF was used to manage the workflow, I would like to acknowledge that this work was supported by the Hartree Center for Digital Innovation, a collaboration between UKRI-STFC and IBM. The demonstration was created in close collaboration with Vadim Elisseev and Ritesh Krishna from IBM Research, alongside Gábor Samu and Michael Spriggs from IBM. Additionally, this post does not aim to provide an in-depth look at SQD itself. Rather the focus is on how LSF can manage hybrid quantum-classical workflows across a heterogeneous environment comprised of both quantum and classical resources.</p>
+
+<p><strong>Hybrid workflows are not new</strong></p>
+
+<p>For three decades, we have seen the use of accelerators in HPC to drive performance—from GPUs to FPGAs and other specialized architectures. Effective scheduling of tasks in these heterogeneous environments has always been a key consideration for efficiency, scalability—and to maximize the ROI in commercial HPC environments. As resource topologies grow more complex, scheduling must account for characteristics such as connectivity, latency, and dependency constraints across increasingly diverse infrastructures. Quantum Processors (QPUs) are now making their appearance as complementary resources within HPC workflows, aim at challenges such as specific optimization problems, many-body physics and quantum chemistry.</p>
+
+<p><strong>Demo details</strong></p>
+
+<p>The IBM LSF cluster was deployed on IBM Cloud using the LSF Deployable Architecture, which rapidly deploys and configures a ready-to-use HPC environment. IBM Research provided integration components for LSF in the form of esub and jobstarter scripts. These scripts enable LSF to query the cloud-based IBM Quantum Platform to determine which QPUs are available for a given user account and meet the qubit requirements specified at job submission. The list of eligible QPUs is then sorted by queue length, and the system with the shortest queue is selected as the target for the quantum circuit. These integration scripts (esub and jobstarter) are intended to be made open source at a later time.</p>
+
+<p>The LSF environment was deployed on IBM Cloud using the <a href="https://cloud.ibm.com/catalog/architecture/deploy-arch-ibm-hpc-lsf-1444e20a-af22-40d1-af98-c880918849cb-global">LSF Deployable Architecture</a> v3.1.0:</p>
+
+<ul>
+<li>LSF 10.1.0.15</li>
+<li>RHEL 8.10</li>
+<li>IBM Cloud profile bx2-16x64 (compute hosts)</li>
+</ul>
+<p>The IBM Qiskit package versions used:</p>
+
+<ul>
+<li>qiskit v2.2.1</li>
+<li>qiskit-addon-sqd v0.12.0</li>
+<li>qiskit-ibm-runtime v0.43.0</li>
+</ul>
+<p>The SQD Python program is available as part of the IBM Qiskit Add-ons (see details here). For this demonstration, the original monolithic SQD script was refactored into four smaller Python programs—each representing a distinct step in the workflow. These steps map directly to LSF jobs, enabling orchestration of the workflow across the quantum and classical HPC resources as shown in the architecture diagram (Figure 1):</p>
+
+<ul>
+<li><strong>Stage 1</strong> map the inputs to a quantum problem.</li>
+<li><strong>Stage 2</strong> optimizes the problem for quantum hardware execution—this is where the circuit is transpiled and optimized for the target QPU</li>
+<li><strong>Stage 3</strong> executes the circuit on the QPU using Qiskit primitives</li>
+<li><strong>Stage 4</strong> performs post-processing and returns the result in the desired classical format</li>
+</ul>
+<p><figure><img src="https://www.gaborsamu.com/images/figure1_lsfqc.png" />
+</figure>
+
+<em>Figure 1 LSF hybrid quantum-classical workflow demo (Vadim Elisseev, IBM Research)</em></p>
+
+<p>For this demonstration, we used IBM LSF Application Center—a web-based interface for job submission and management. LSF Application Center supports application templates, which simplify job submission by providing predefined forms. Templates were created for both the SQD workflow and the Jupyter Notebook application, which is used to visualize the workflow results.</p>
+
+<p><strong>Demo execution steps</strong></p>
+
+<ul>
+<li>We start by using the SQD template to submit an instance of the SQD workflow (Figure 2) which is used to calculate an approximate ground-energy state of the nitrogen molecule (N2). The submission form is customized to let users specify the script for each step of the workflow and specify the desired number of qubits required on the QPU for the quantum circuit. This parameter is used by LSF to select the appropriate quantum system from the available resources. Note that jobs are submitted to LSF with a done dependency condition, ensuring that each stage runs only after the previous one completes successfully. Stage 2 begins after Stage 1, Stage 3 follows Stage 2, and Stage 4 executes once Stage 3 has finished</li>
+</ul>
+<p><figure><img src="https://www.gaborsamu.com/images/figure2a_lsfqc.png" />
+</figure>
+
+<em>Figure 2 LSF Application Center SQD submission form</em></p>
+
+<ul>
+<li>Next, we submit an instance of the Jupyter Notebook to monitor the workflow initiated in Step 1. This notebook is designed for this demonstration to visualize the status of each workflow step, displaying results as they successfully complete. Figure 3 shows the Jupyter submission form.</li>
+</ul>
+<p><figure><img src="https://www.gaborsamu.com/images/figure3a_lsfqc.png" />
+</figure>
+
+<em>Figure 3 LSF Application Center Jupyter Notebook submission form</em></p>
+
+<ul>
+<li>The Workload view in the LSF Application Center can be used to monitor the progress of each job within the workflow. Additionally, the Jupyter Notebook instance can be accessed here via the provided hyperlink. Figure 4 shows the workload view in LSF Application Center. This shows a list of jobs in the LSF system.</li>
+</ul>
+<p><figure><img src="https://www.gaborsamu.com/images/figure4a_lsfqc.png" />
+</figure>
+
+<em>Figure 4 LSF Application Center workload view</em></p>
+
+<ul>
+<li>As each stage of the SQD workflow completes, the Jupyter Notebook displays the corresponding output in new browser tabs. This includes qubit coupling maps for the QPUs available on the IBM Quantum Platform for the specific account, a diagram of the circuit mapped to the selected QPU, readings from the QPU, and a plot of the estimated ground-state energy of the N2 molecule.</li>
+</ul>
+<p><figure><img src="https://www.gaborsamu.com/images/figure5_lsfqc.png" />
+</figure>
+
+<em>Figure 5 Output from each step of the SQD workflow (Vadim Elisseev, IBM Research)</em></p>
+
+<ul>
+<li>Given that demo environment was built using the LSF Deployable Architecture, IBM Cloud Monitoring is automatically configured. It provides a dashboard for the underlying cloud infrastructure, including detailed hardware metrics. In addition, an LSF Dashboard is available through IBM Cloud Monitoring, showing overall cluster metrics such as total jobs, job status, and queue distribution, along with scheduler performance trends over time. IBM Cloud Monitoring infrastructure view and LSF dashboard are shown in Figure 5.</li>
+</ul>
+<p><figure><img src="https://www.gaborsamu.com/images/figure6_lsfqc.png" />
+</figure>
+
+<em>Figure 6 IBM Cloud Monitoring: Infrastructure view, and LSF dashboard</em></p>
+
+<p>A video recording of the end-to-end demonstration can be found <a href="https://community.ibm.com/community/user/viewdocument/demonstration-of-managing-hybrid-qu?CommunityKey=74d589b7-7276-4d70-acf5-0fc26430c6c0&amp;tab=librarydocuments">here</a>.</p>
+
+<p><strong>Conclusions</strong></p>
+
+<p>This demo marked a milestone by demonstrating that IBM Spectrum LSF can seamlessly orchestrate quantum and classical compute resources for a unified workflow. This example demonstrates a practical approach to integrating quantum capabilities into an existing HPC environment running IBM LSF.</p>
+
+<p>This capability lays the foundation for hybrid computing pipelines that integrate emerging quantum hardware into established HPC environments. As organizations adopt these architectures and tools mature, we can expect production-grade workflows tackling complex problems across domains. The future of HPC is not a choice between classical or quantum—it is their convergence, working together to unlock new computational possibilities.</p>
+
+<p>The topic of scheduling for hybrid quantum-classical environments will be the subject of an upcoming paper &ldquo;On Topological Aspects of Workflows Scheduling on Hybrid Quantum - High Performance Computing Systems&rdquo; by Vadim Elisseev, Ritesh Krishna, Vasileios Kalantzis, M. Emre Sahin and Gábor Samu.</p>]]></content><author><name>Ramblings of a supercomputing enthusiast.</name></author><category term="gaborsamu" /><summary type="html"><![CDATA[As we enter 2026, it seems that SC25 is far off in our rearview mirror. But it&rsquo;s only been a bit over a month since the HPC world converged on St. Louis, Missouri for the annual Supercomputing 2025 (SC25) event. SC25 signaled one emerging trend: the exploration of hybrid workflows combining quantum and classical computing, offering a look at how these technologies can work synergistically over time. This was indeed the main topic of the 1st Annual Workshop on Large-Scale Quantum-Classical Computing, a workshop which I found to be very insightful.]]></summary></entry></feed>

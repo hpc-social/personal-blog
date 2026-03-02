@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>The Utility vs the Professional Services Firm - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2022-07-03T01:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2022/the-utility-vs-the-professional-services-firm/"/>
+        <meta property="og:title" content="The Utility vs the Professional Services Firm - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="The Utility vs the Professional Services Firm - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">03.07.2022  &middot; <span class="reading-time" title="Estimated read time">
+  
+   8 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/the-utility-vs-the-professional-services-firm&amp;text=The Utility vs the Professional Services Firm - https://hpc.social/the-utility-vs-the-professional-services-firm" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/utility-vs-professional-serviecs.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>The Utility vs the Professional Services Firm</h1>
+	<h2 id="as-research-computing-and-data-becomes-more-complex-and-diverse-we-need-more-professional-services-firms-and-fewer-utilties">As research computing and data becomes more complex and diverse, we need more professional services firms and fewer utilties</h2>
+
+<p>(Note: This post is adapted from <a href="https://www.researchcomputingteams.org/newsletter_issues/0127">#127</a> of the <a href="https://www.researchcomputingteams.org">Research Computing Teams Newsletter</a>)</p>
+
+<p>I get to talk with a lot of research computing and data teams - software, data, and systems.  Sometimes in these conversations it’s pretty clear that some teams, or the team and their funder, or a team and I, are talking a bit past each other.  And that’s usually because they or we are (currently) operating with very different mental models of how they operate.</p>
+
+<p>Some research computing and data teams are operating as Utilities, and see the world through that lens; a growing number are operating as Professional Services Firms.  Others are moving from one to the other, and are at different places along that very abrupt transition.  Some kinds of groups (like bioinformatics cores) are much more likely to already be operating in service mode, while others (like research compute infrastructure teams) are more likely to still think of themselves as utilities.  It varies from place to place, though, depending on local conditions.  But they’re very different models!</p>
+
+<figure style="width: 45%; float: right;">
+  <img alt="Utility vs professional services.  Image Credit: left, John Moore (@thejmoore) at Unsplash.com; right, Jason Goodman @jasongoodman_youxventures at Unsplash.com" src="https://www.dursi.ca/assets/imgs/utility-vs-professional-svc.png" />
+  <figcaption><i>Utility service and professional services delivery are very different, and require different funding, management, and career development models.  Image credit: <a href="https://unsplash.com/photos/0MKzwPmehRE">left</a> and <a href="https://unsplash.com/photos/X8H8vPcelPk">right</a>.</i></figcaption>
+</figure>
+
+<p>Utilities, like power companies or garbage collection or municipal potable water, were really the only sensible role models for the first decades of research computing and data teams.  Those teams were entirely about operating large equipment purchased from vendors.  Costs were mostly a big capital expense.  Everyone who needed the utility needed the same thing - undifferentiated flops and bytes, or 60Hz 120VAC.  Because everyone needed the same thing, economies of scale led to <a href="https://en.wikipedia.org/wiki/Natural_monopoly">natural monopolies</a>; the most reasonable provision model was for the local jurisdiction/institution to own or control a single operator.  Differentiation or strategy, or gaining new customers, weren’t meaningful discussion topics.  The only thing that really makes a difference is scale, which leads to mergers.  Innovation happens slowly, top-down, at the industry-wide scale and usually from the vendors (“hey, did you hear about those new gas compressors Dyneco announced?”), and diffuses outwards.  Employees take pride in and the organization values operational skill and things ticking along smoothly.  Customers value reliability.  The only thing that matters for any individual operator is to operate effectively and to provide the standard service with the right amount of cost: high enough to absorb the available subsidy, low enough to not go broke.  If a customer needs something other than what the utility provides, rather than that being a market opportunity, it’s either an inconvenience or an irrelevance.  The power company or the water utility or the <a href="https://vimeo.com/355556831">old phone monopoly</a> just doesn’t serve that need.</p>
+
+<p>Professional Service Firms — say engineering firms, or architects, or consultancies — are very different beasts.  They might very well have significant capital investment in specialized equipment, but their main selling point and their biggest cost is expertise.  Competing for and retaining that expertise, and developing that expertise in house and amongst their clients, are principal concerns.  As part of a “full-service” offering they they likely have some fairly standard services they offer at the low end, where operating cost and efficiency is vital.  But what the organization values, and the employees enjoy, is at the high-touch end — getting deeply involved with the client work, and being as much a collaborator or partner or “trusted advisor” as a service provider.  Different clients want very different things, and that high-touch high-expertise work is specialized and labour intensive, so the firms themselves need a clear focus; they <em>can’t</em> meet all needs.  Clients can go elsewhere, so there is redundancy and competition, but less than you’d think at a distance.  In civil engineering a geotechnical firm is complementary, not competing, with one that specializes in water resource engineering.</p>
+
+<p>As in the rest of our lives, in research computing we need to have utilities.  As research data management matures, institutional or regional data depositories become mature and “enterprise” enough to become utilities, likely run by IT or the Library.  Teaching or CI/CD or MLOps resources for data science or software development are likely best served by this model.  The closer the operations are to standard, something that can be run by IT, the more likely it is to be a utility.  But one has to be careful.  Utilies are commodoties: they tend to get merged together wherever feasible, since scale matters and it’s all undifferentiated commodity provision.</p>
+
+<p>As research computing becomes broader and faster changing and more diverse, we need more and more professional services firms, too; nimble groups specialized to particular needs and ready to adapt as those needs change.  As even infrastructure is becoming less one-size-fits-all, and methods for making use of computing and data for diverse fields grow more complex and expertise intensive, the preconditions for the utility model are met in fewer situations than used to be.</p>
+
+<p>A lot of research computing teams are interested in providing something more like professional services, but were created in the Utility model, and are stuck there by their funders.  The institutional or external funders still have this very specific (and to their mind time tested and successful) operating model in their plans.  Utilities are funded very differently than professional services firms.  At utility scale, it doesn’t make sense to outsource things, or develop non-standard services (who wants non-standard power coming into their house!)  Funders requirements on eligible expenses may focus almost entirely on the capital spend, and not on operating funding that’s needed to make effective use of the capital, or to be more agile in how services are delivered.</p>
+
+<p>Even those teams who aren’t being held back by funders and who want to make the switch to professional services from their original utility model find it a hard transition. There’s no obvious, incremental path to go from providing a standard, stable commodity to changing, specialized, bundles of expertise.  Utilities operate very differently from professional services firms.  They value different things. The models for staff growth are different.  So they have to be managed quiet differently, and there’s no clear path internally from A to B.</p>
+
+<p>Besides funding, and internal considerations, utilities and professional services firms are also percieved and valued by their clients very differently.  Utilities’ existing customers don’t want change, and new customers aren’t yet interested in getting advanced app software development suggestions from what they perceive to still be the mobile telephony provider.</p>
+
+<p>But research computing and data is changing, increasingly quickly, and the utility approach only meets a piece of these growing needs.  Navigating the transition isn’t going to be easy, for RCD teams, leaders, or funders; but expressing it clearly and talking about it more will maybe mean we’re not talking past each other so often.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2022/ssh-tunnels/">< SSH Tunnels</a>
+	 
+	<a class="next" href="/personal-blog/2022/buy-and-lease-not-cloud-vs-on-prem/">Buy and Lease, not Cloud vs On-Prem ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

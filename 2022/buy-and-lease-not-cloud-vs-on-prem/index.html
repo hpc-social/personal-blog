@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Buy and Lease, not Cloud vs On-Prem - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2022-07-16T00:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2022/buy-and-lease-not-cloud-vs-on-prem/"/>
+        <meta property="og:title" content="Buy and Lease, not Cloud vs On-Prem - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Buy and Lease, not Cloud vs On-Prem - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">16.07.2022  &middot; <span class="reading-time" title="Estimated read time">
+  
+   3 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/buy-and-lease-not-cloud-vs-on-prem&amp;text=Buy and Lease, not Cloud vs On-Prem - https://hpc.social/buy-and-lease-not-cloud-vs-on-prem" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/buy-and-lease.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Buy and Lease, not Cloud vs On-Prem</h1>
+	<p>(Note: This post is adapted from <a href="https://www.researchcomputingteams.org/newsletter_issues/0130">#130</a> of the <a href="https://www.researchcomputingteams.org">Research Computing Teams Newsletter</a>)</p>
+
+<p>I’d like us to move past the “cloud-vs-on-prem” debate.  Right now, AWS or GCP will deliver their cloud hardware into your data centres to run there, if you want.  Various commercial software can be subscribed to to manage infrastructure control.  Hardware can be leased, bought, sold back.  If your data centre is a co-lo, so the premises aren’t yours, is it really on premises?  And…</p>
+
+<p>There’s a whole spectrum of options available today, and our community is still debating “on-prem vs cloud” like it’s 2012.  It would do us and our researchers well to have more sophisticated discussions.  The question isn’t “on-prem vs cloud”, it’s what should be bought outright and what should be leased for a given workload mix.</p>
+
+<p>Here are some real options for moderately-sized teams charged with delivering the capabilities of a system to users right now:</p>
+
+<ul>
+  <li>Buy the hardware outright, install all open-source software,</li>
+  <li>Buy the hardware outright, install a lot of “rented” commercial software (or commercial support of open source software)</li>
+  <li>Buy some hardware outright and install something like Azure Stack, renting a lot of the infrastructure software and control plane</li>
+  <li>Lease the hardware, with any of the software options above</li>
+  <li>Host any of the hardware options above in a datacenter you own, “renting” the data centre operations staff’s time (cooling, power, internet, physical security..)</li>
+  <li>Any of the hardware above in a leased space where you control and have to manage the utilities, renting the same staff time</li>
+  <li>Any of the hardware above in an an institutional or commercially-managed space where you are now “renting” the space and their data centre operations staff</li>
+  <li>Rent medium-term reserved hardware at a cloud provider, combining data centre ops, some systems ops, and the hardware for moderate periods of time</li>
+  <li>Mix of the above plus short-term “renting” of on-demand or shorter-term contract nodes/services</li>
+  <li>All short-term</li>
+  <li>“Hybrid”, which just means a mix of any two or more of any of the combinations above</li>
+</ul>
+
+<p>It’s not “A vs B” any more, and it hasn’t been for ages.  We have a widely diverse research community with its huge range of use cases to support, and we need to think in more sophisticated ways than obsolescent binaries.</p>
+
+<p>(And <strong>here’s</strong> a controversial take:  You know who in our institutions are <em>really, really</em> smart about leasing versus buying for big capital needs?  Who have taken, like, whole postsecondary courses on the topic?  The folks in the finance department).</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2022/buy-and-lease-not-cloud-vs-on-prem/">< Buy and Lease, not Cloud vs On-Prem</a>
+	 
+	<a class="next" href="/personal-blog/2022/ceph-rocksdb-tuning-deep-dive/">Ceph RocksDB Tuning Deep-Dive ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>LetsEncrypt for Multiple Hosts - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2019-10-11T20:38:14-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2019/letsencrypt-for-multiple-hosts/"/>
+        <meta property="og:title" content="LetsEncrypt for Multiple Hosts - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="LetsEncrypt for Multiple Hosts - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">11.10.2019  &middot; <span class="reading-time" title="Estimated read time">
+  
+   2 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/letsencrypt-for-multiple-hosts&amp;text=LetsEncrypt for Multiple Hosts - https://hpc.social/letsencrypt-for-multiple-hosts" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://derekweitzel.com/">Dereks Web</a>&nbsp;Thoughts from Derek.&nbsp;See the original post&nbsp;<a target="_blank" href="https://derekweitzel.com/2019/10/11/letsencrypt-for-multiple-hosts/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>LetsEncrypt for Multiple Hosts</h1>
+	<p>Using <a href="https://letsencrypt.org/">LetsEncrypt</a> for certificate creation and management has made secure communications much easier.  Instead of contacting the IT department of your university to request a certificate, you can skip the middle man and generate your own certificate which it trusted around the world.</p>
+
+<p>A common use case of certificates is to secure data transfers.  Data transfers that use the GridFTP, XRootD, or HTTPS transfer protocols can load balance between multiple servers to increase throughput.  <a href="https://www.keepalived.org/">keepalived</a> is used to load balance between multiple transfer servers.  The certificate provided to the clients need to have the virtual host address of the load balancer, as well as the hostname of each of the worker nodes.</p>
+
+<ol>
+  <li>Create a shared directory between the data transfer nodes</li>
+  <li>Install httpd on each of the data transfer nodes</li>
+  <li>Configure httpd to use the shared directory as the “webroot”</li>
+  <li>Configure <code class="language-plaintext highlighter-rouge">keepalived</code> to use virtualize port 80 to at least 1 of your data transfer nodes.</li>
+  <li>Run certbot with the webroot option, as well as the multiple hostnames of the data transfer nodes.</li>
+</ol>
+
+<p>Create a NFS share that each of the data transfer nodes can read.  The steps in creating a NFS shared directory is outside the scope of this guide.  In this guide, the shared directory will be referred as <code class="language-plaintext highlighter-rouge">/mnt/nfsshare</code> . Next, install httpd on each of the data transfer nodes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@host $ yum install httpd
+</code></pre></div>
+</div>
+
+<p>Create a webroot directory within the shared directory on one of the nodes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@host $ mkdir /mnt/nfsshare/webroot
+</code></pre></div>
+</div>
+
+<p>Configure httpd to export the same webroot on each of the data transfer nodes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;VirtualHost *:80&gt;
+    DocumentRoot "/mnt/nfsshare/webroot"
+    &lt;Directory "/mnt/nfsshare/webroot"&gt;
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre></div>
+</div>
+
+<p>Configure <code class="language-plaintext highlighter-rouge">keepalived</code> to virtualize port 80 to at least one of your data transfer nodes.
+Add to your configuration:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>virtual_server &lt;VIRTUAL-IP-ADDRESS&gt; 80 {
+    delay_loop 10
+    lb_algo wlc
+    lb_kind DR
+    protocol tcp
+
+    real_server &lt;GRIDFTP-SERVER-#1-IP ADDRESS&gt; {
+        TCP_CHECK {
+            connect_timeout 3
+            connect_port 80
+        }
+    }
+}
+</code></pre></div>
+</div>
+
+<p>Run <code class="language-plaintext highlighter-rouge">certbot</code> with the webroot options on only 1 of the data nodes.  The first domain in the command line should be the virtual hostname:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@host $ certbot certonly -w /mnt/nfsshare/webroot -d &lt;VIRTUAL_HOSTNAME&gt; -d &lt;DATANODE_1&gt; -d &lt;DATANODE_N&gt;...
+</code></pre></div>
+</div>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2019/computational-science-collaborations-train-great-managers-but-trainees-might-need-help-to-become-good-managers-first/">< Computational Science Collaborations Train Great Managers - But Trainees Might Need Help To Become Good Managers First</a>
+	 
+	<a class="next" href="/personal-blog/2019/the-purpose-of-research-computing-is-the-research-not-the-computing/">The Purpose of Research Computing is the Research, not the Computing ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

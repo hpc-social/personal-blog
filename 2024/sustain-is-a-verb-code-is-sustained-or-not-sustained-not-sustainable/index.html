@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Sustain is a Verb- Code is Sustained or Not Sustained, not 'Sustainable' - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2024-06-02T00:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2024/sustain-is-a-verb-code-is-sustained-or-not-sustained-not-sustainable/"/>
+        <meta property="og:title" content="Sustain is a Verb- Code is Sustained or Not Sustained, not 'Sustainable' - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Sustain is a Verb- Code is Sustained or Not Sustained, not 'Sustainable' - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">02.06.2024  &middot; <span class="reading-time" title="Estimated read time">
+  
+   2 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/sustain-is-a-verb-code-is-sustained-or-not-sustained-not-sustainable-&amp;text=Sustain is a Verb- Code is Sustained or Not Sustained, not 'Sustainable' - https://hpc.social/sustain-is-a-verb-code-is-sustained-or-not-sustained-not-sustainable-" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/sustained-not-sustainable.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Sustain is a Verb- Code is Sustained or Not Sustained, not 'Sustainable'</h1>
+	<p>(Note: This post is adapted from <a href="https://www.researchcomputingteams.org/newsletter_issues/0182">#182</a> of the <a href="https://www.researchcomputingteams.org">Research Computing Teams Newsletter</a>)</p>
+
+<p>So you, reader, will already understand that software is not “sustainable”.  There’s no sustainability linter you can run over the code to highlight possible sustainability issues, no test suite you can run to check for sustainability regressions.   Sustainability is not an inherent property of a piece of software.</p>
+
+<p>Same with a computing system, or a curated database, or..</p>
+
+<p>Instead, these efforts are sustained, or not, by people or organizations who pay for it to be sustained.</p>
+
+<p>Those people or organizations do this sustaining because they (or a community they support) need that software or other effort to do their jobs.  Because there are users who advocate for sustaining the effort, or sustain it themselves.</p>
+
+<p>In other words, sustaining is something a <strong>community</strong> does, and to the extent that “sustainability” in this sense is a thing that exists at all, one enhances an efforts’ “sustainability” by nurturing and supporting that community, and making it easy for them to effectively advocate for continued sustenance.</p>
+
+<p>Even so, the need the community has for that effort is going to wax and wane over time, as will the sustaining.   Eventually, at some point, the community will move on or dissolve entirely, and the sustaining will come to an end.</p>
+
+<p>So a tool goes from a prototype or something bespoke for one problem, and grows in <a href="https://www.researchcomputingteams.org/newsletter_issues/0091">technological readiness</a> (#91) to become <a href="https://www.researchcomputingteams.org/newsletter_issues/0119">RCD development, not just research</a> (#119), and over time gathers a community which, with luck, will sustain the effort for as long as the community exists and needs it.</p>
+
+<p>It may not find or build such a community - in startup speak it may not find “product-market fit”, and fade away (as with Sochat’s article on updated software in #<a href="https://www.researchcomputingteams.org/newsletter_issues/0172">172</a>).  That’s disappointing for the individuals involved, but it’s very much the nature of research - not every idea or effort pans out.</p>
+
+<p>This understanding of sustaining vs sustainability is finally <em>starting</em> to gain wider acceptance, which heartens me.  We need to understand that passively hoping that by checking off a list of criteria we’ve proved ourselves worthy, and that therefore sustaining funding will somehwo happen, is to let down our community and our users.   We have to actively create the communities that will sustain the work we start.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2024/isc-24-recap/">< ISC’24 recap</a>
+	 
+	<a class="next" href="/personal-blog/2024/advanced-lsf-resource-connector-configuration-on-ibm-cloud-part-iii/">Advanced LSF resource connector configuration on IBM Cloud - part III ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

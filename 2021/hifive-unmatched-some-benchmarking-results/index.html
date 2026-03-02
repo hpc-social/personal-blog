@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>HiFive Unmatched - some benchmarking results - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2021-09-15T00:14:28-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2021/hifive-unmatched-some-benchmarking-results/"/>
+        <meta property="og:title" content="HiFive Unmatched - some benchmarking results - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="HiFive Unmatched - some benchmarking results - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">15.09.2021  &middot; <span class="reading-time" title="Estimated read time">
+  
+   49 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/hifive-unmatched-some-benchmarking-results&amp;text=HiFive Unmatched - some benchmarking results - https://hpc.social/hifive-unmatched-some-benchmarking-results" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/riscv_benchmarking/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>HiFive Unmatched - some benchmarking results</h1>
+	<p>No sooner did I receive my SiFive HiFive Unmatched board than did the questions
+about the performance of the board start to come in - from far and wide.
+Prior to receiving the board, <a href="http://linuxgizmos.com/sifive-to-demo-pc-running-new-risc-v-soc-and-unveil-next-gen-ai-soc">articles</a> about the performance of the
+Freedom U740 SOC compared it with Arm Cortex-A55 cores. I&rsquo;ve had a range of Arm
+based systems over the years, so this helped to set my expectation ahead
+of time in terms of performance. What was promising about the Unmatched
+boars is the fact that it has a PCIe slot (for a GPU) and the possibility
+to use NVMe storage. And as Unmatched boards started to arrive out in the
+wild, posts regarding performance of the board appeared in the [SiFive forums] (<a href="https://forums.sifive.com/t/relative-cpu-performance/4373/2">https://forums.sifive.com/t/relative-cpu-performance/4373/2</a> ).</p>
+
+<p>Now that I&rsquo;ve had the board setup for a few weeks, I decided to run a series
+of benchmarks on the board, with an HPC flavour. I&rsquo;ve setup my Unmatched
+board effectively as a desktop system. I&rsquo;ve installed both a GPU as well as
+and NVMe SSD in the system (details below). The system has been installed with
+Ubuntu 21.04 and has been configured to boot with the CPU clock speed
+at 1.4 GHz following the procedure <a href="https://forums.sifive.com/t/testing-unmatched-at-1-4-ghz/4863">here</a>.</p>
+
+<p>For the record, I&rsquo;ve configured a full desktop running KDE Plasma and
+I&rsquo;m actually writing this post in Emacs running on the Unmatched. It&rsquo;s not
+quite up to being a desktop replacement, but I can happily use it for
+less intense tasks as well as programming, etc.</p>
+
+<p><strong>NVIDIA GeForce GT 1030</strong>
+<div class="highlight"><pre><code class="language-plaintext">root@unmatched:/home/ubuntu# lshw -c display
+  *-display                 
+       description: VGA compatible controller
+       product: GP108 [**GeForce GT 1030**]
+       vendor: NVIDIA Corporation
+       physical id: 0
+       bus info: pci@0000:07:00.0
+       logical name: /dev/fb0
+       version: a1
+       width: 64 bits
+       clock: 33MHz
+       capabilities: pm msi pciexpress vga_controller bus_master cap_list rom fb
+       configuration: depth=32 driver=nouveau latency=0 mode=1920x1200 visual=truecolor xres=1920 yres=1200
+       resources: iomemory:200-1ff iomemory:200-1ff irq:93 memory:61000000-61ffffff memory:2000000000-200fffffff memory:2010000000-2011ffffff ioport:0(size=128) memory:60800000-6087ffff</code></pre></div>
+</p>
+
+<p><strong>Samsung SSD 970 EVO Plus 250GB</strong>
+<div class="highlight"><pre><code class="language-plaintext">root@unmatched:/home/ubuntu# lshw -c storage
+  *-storage                 
+       description: Non-Volatile memory controller
+       product: NVMe SSD Controller SM981/PM981/PM983
+       vendor: Samsung Electronics Co Ltd
+       physical id: 0
+       bus info: pci@0000:06:00.0
+       version: 00
+       width: 64 bits
+       clock: 33MHz
+       capabilities: storage pm msi pciexpress msix nvm_express bus_master cap_list
+       configuration: driver=nvme latency=0
+       resources: irq:38 memory:60500000-60503fff
+     *-nvme0
+          description: NVMe device
+          product: Samsung SSD 970 EVO Plus 250GB
+          physical id: 0
+          logical name: /dev/nvme0
+          version: 2B2QEXM7
+          serial: S59BNXXX2065XXX
+          configuration: nqn=nqn.2014.08.org.nvmexpress:144dXXXdS59BNJ0XXX6509J     Samsung SSD 970 EVO Plus 250GB state=live</code></pre></div>
+</p>
+
+<p><strong>High-Performance Linpack (HPL)</strong></p>
+
+<p>Although I did previously run <a href="https://www.netlib.org/benchmark/hpl/">HPL</a> on Unmatched, that was prior to the changes
+needed to boot the system at 1.4 GHz. Furthermore, some helpful individuals
+on Twitter actually pointed out an issue with my HPL run (based on the
+massive run queue lengths I observed). You can view the thread on Twitter
+here.</p>
+
+<blockquote class="twitter-tweet"><p dir="ltr" lang="en">Now running at a blistering 1.4 GHz, I'm giving Linpack another whirl on the <a href="https://twitter.com/hashtag/Unmatched?src=hash&amp;ref_src=twsrc%5Etfw">#Unmatched</a> board. Will definitely break 2 GFlops this time. <a href="https://twitter.com/hashtag/SiFive?src=hash&amp;ref_src=twsrc%5Etfw">#SiFive</a> <a href="https://twitter.com/hashtag/HiFive?src=hash&amp;ref_src=twsrc%5Etfw">#HiFive</a> <a href="https://twitter.com/hashtag/RISCV?src=hash&amp;ref_src=twsrc%5Etfw">#RISCV</a> <a href="https://t.co/GOV9ISOUCJ">https://t.co/GOV9ISOUCJ</a> <a href="https://t.co/nAwNRNXZWm">pic.twitter.com/nAwNRNXZWm</a></p>
+&mdash; Gábor SAMU (@gabor_samu) <a href="https://twitter.com/gabor_samu/status/1409633174255116293?ref_src=twsrc%5Etfw">June 28, 2021</a></blockquote>
+
+<p>With the folly of my MPI ways better understood, I ran HPL to completion
+with a result of 2.5 GFlops. I&rsquo;ve not devoted more time to squeeze more
+performance from the system yet, as this result still seems low to me.</p>
+
+<div class="highlight"><pre><code class="language-plaintext">ubuntu@unmatched:~/hpl-2.3/bin/Linux_RISCV$ export OMP_NUM_THREADS=1
+ubuntu@unmatched:~/hpl-2.3/bin/Linux_RISCV$ mpirun --hostfile ./hostfile ./xhpl 
+================================================================================
+HPLinpack 2.3  --  High-Performance Linpack benchmark  --   December 2, 2018
+Written by A. Petitet and R. Clint Whaley,  Innovative Computing Laboratory, UTK
+Modified by Piotr Luszczek, Innovative Computing Laboratory, UTK
+Modified by Julien Langou, University of Colorado Denver
+================================================================================
+
+An explanation of the input/output parameters follows:
+T/V    : Wall time / encoded variant.
+N      : The order of the coefficient matrix A.
+NB     : The partitioning blocking factor.
+P      : The number of process rows.
+Q      : The number of process columns.
+Time   : Time in seconds to solve the linear system.
+Gflops : Rate of execution for solving the linear system.
+
+The following parameter values will be used:
+
+N      :   35712 
+NB     :      96 
+PMAP   : Row-major process mapping
+P      :       2 
+Q      :       2 
+PFACT  :   Right 
+NBMIN  :       4 
+NDIV   :       2 
+RFACT  :   Crout 
+BCAST  :  1ringM 
+DEPTH  :       1 
+SWAP   : Mix (threshold = 64)
+L1     : transposed form
+U      : transposed form
+EQUIL  : yes
+ALIGN  : 8 double precision words
+
+--------------------------------------------------------------------------------
+
+- The matrix A is randomly generated for each test.
+- The following scaled residual check will be computed:
+      ||Ax-b||_oo / ( eps * ( || x ||_oo * || A ||_oo + || b ||_oo ) * N )
+- The relative machine precision (eps) is taken to be               1.110223e-16
+- Computational tests pass if scaled residuals are less than                16.0
+
+================================================================================
+T/V                N    NB     P     Q               Time                 Gflops
+--------------------------------------------------------------------------------
+WR11C2R4       35712    96     2     2           11941.62             2.5428e+00
+HPL_pdgesv() start time Thu Jul  8 16:26:11 2021
+
+HPL_pdgesv() end time   Thu Jul  8 19:45:12 2021
+
+--------------------------------------------------------------------------------
+||Ax-b||_oo/(eps*(||A||_oo*||x||_oo+||b||_oo)*N)=   4.76417669e-03 ...... PASSED
+================================================================================
+
+Finished      1 tests with the following results:
+              1 tests completed and passed residual checks,
+              0 tests completed and failed residual checks,
+              0 tests skipped because of illegal input values.
+--------------------------------------------------------------------------------
+
+End of Tests.
+================================================================================</code></pre></div>
+
+<p><strong>STREAM</strong></p>
+
+<p>Up next is <a href="https://www.cs.virginia.edu/stream/">STREAM</a>, which is used to test memory bandwidth.  I ran stream using the default settings for memory
+size.</p>
+
+<div class="highlight"><pre><code class="language-plaintext">ubuntu@unmatched:~/STREAM$ ./stream_c.exe 
+-------------------------------------------------------------
+STREAM version $Revision: 5.10 $
+-------------------------------------------------------------
+This system uses 8 bytes per array element.
+-------------------------------------------------------------
+Array size = 10000000 (elements), Offset = 0 (elements)
+Memory per array = 76.3 MiB (= 0.1 GiB).
+Total memory required = 228.9 MiB (= 0.2 GiB).
+Each kernel will be executed 10 times.
+ The *best* time for each kernel (excluding the first iteration)
+ will be used to compute the reported bandwidth.
+-------------------------------------------------------------
+Number of Threads requested = 4
+Number of Threads counted = 4
+-------------------------------------------------------------
+Your clock granularity/precision appears to be 1 microseconds.
+Each test below will take on the order of 91364 microseconds.
+   (= 91364 clock ticks)
+Increase the size of the arrays if this shows that
+you are not getting at least 20 clock ticks per test.
+-------------------------------------------------------------
+WARNING -- The above is only a rough guideline.
+For best results, please be sure you know the
+precision of your system timer.
+-------------------------------------------------------------
+Function    Best Rate MB/s  Avg time     Min time     Max time
+Copy:            1349.8     0.121990     0.118533     0.132665
+Scale:           1175.2     0.138145     0.136152     0.149729
+Add:             1306.3     0.186115     0.183730     0.196969
+Triad:           1315.8     0.185806     0.182400     0.193755
+-------------------------------------------------------------
+Solution Validates: avg error less than 1.000000e-13 on all three arrays
+-------------------------------------------------------------</code></pre></div>
+
+<p><strong>IOzone</strong></p>
+
+<p>Next, I wheeled out IOzone to benchmark the filesystem (on the NVMe SSD).
+The full output from IOzone can be viewed below.</p>
+
+<!-- raw HTML omitted -->
+<div class="highlight"><pre><code class="language-plaintext">ubuntu@unmatched:~$ time iozone -a -R -c -b result_file.xls -f ./testfile
+	Iozone: Performance Test of File I/O
+	        Version $Revision: 3.489 $
+		Compiled for 64 bit mode.
+		Build: linux 
+
+	Contributors:William Norcott, Don Capps, Isom Crawford, Kirby Collins
+	             Al Slater, Scott Rhine, Mike Wisner, Ken Goss
+	             Steve Landherr, Brad Smith, Mark Kelly, Dr. Alain CYR,
+	             Randy Dunlap, Mark Montague, Dan Million, Gavin Brebner,
+	             Jean-Marc Zucconi, Jeff Blomberg, Benny Halevy, Dave Boone,
+	             Erik Habbinga, Kris Strecker, Walter Wong, Joshua Root,
+	             Fabrice Bacchella, Zhenghua Xue, Qin Li, Darren Sawyer,
+	             Vangel Bojaxhi, Ben England, Vikentsi Lapa,
+	             Alexey Skidanov, Sudhir Kumar.
+
+	Run began: Thu Jul  8 21:24:44 2021
+
+	Auto Mode
+	Excel chart generation enabled
+	Include close in write timing
+	Command line used: iozone -a -R -c -b result_file.xls -f ./testfile
+	Output is in kBytes/sec
+	Time Resolution = 0.000001 seconds.
+	Processor cache size set to 1024 kBytes.
+	Processor cache line size set to 32 bytes.
+	File stride size set to 17 * record size.
+                                                              random    random     bkwd    record    stride                                    
+              kB  reclen    write  rewrite    read    reread    read     write     read   rewrite      read   fwrite frewrite    fread  freread
+              64       4    54002   117900   312204   435202   410573   129316   271200    142875    444572   106319   120331   286849   378715
+              64       8    69708   153848   357529   551422   488236    49382   321554    200653    576282   128265   167583   467002   503814
+              64      16    80398   214781   647135   571375   598110   190947   443837    248136    571375   159991   192730   503814   659861
+              64      32    77564   245190   679917   633392   633392   264258   435202    274809    492717   134769   173429   359444   385237
+              64      64    98443   280553   516414   780776   571375   279385   463774    280553    529661   266620   278516   477808   587635
+             128       4    65641   140659   488594   544601   488594   145936   365764    170879    398625   123084   138554   499970   547377
+             128       8    85860   179507   544601   597981   624409   184694   465708    231429    826202   166481   147946   408949   387686
+             128      16    93910   246632   731625   294207   612303   245616   410199    239268    419822   114917   143671   509943   537512
+             128      32   107658   274080   692017   618653   687585   290859   540217    327199    666253   200339   245168   606767   677178
+             128      64   106042   256531   606767   670413   653282   317711   533241    338761    649331   164744   195737   492178   517812
+             128     128    97563   203529   592699   695603   533241   217991   351630    198414    348661   164542   183432   430942   621518
+             256       4    25934    32372   508929   528987   512818    32245   358056    168092    428843   130406   135167   466275   519266
+             256       8    87675   196016   557844   602276   560172   186841   436870    264741    515032   178516   188514   585845   618584
+             256      16   103395   234246   576720   557554   598249   242883   531080    335564    882426   193963   223379   585845   510866
+             256      32   108845   292508   592636   560172   598249   265003   467290    357937    699594   181442   204959   474937   576411
+             256      64   104828   340027   768712   670332   817898   364622   703721    414283    828628   264481   320347   802014   792543
+             256     128   129682   291872   604991   615393   661657   335564   349206    341759    627623   182863   267512   663292   716876
+             256     256   115533   328180   666586   900936   773140   385433   585526    375459    680960   365242   374935   716876   856386
+             512       4    69857   144428   546460   582478   531055   142777   420020    177348    367291   112552   118824   355319   392678
+             512       8    83456   212373   675350   619978   688118   217978   599553    285425    503418   161710   158605   438011   466255
+             512      16    97062   246644   694797   680918   772252   277352   699322    348063    728502   230743   249858   755144   798675
+             512      32    96365   245096   451454   430978   582478   248183   433939    374269    850554   227251   268912   748563   784094
+             512      64   100864   346435   762112   706221   750656   347556   680918    357032    717069   181102   216222   435700   606667
+             512     128   126577   358283   806171   742096   861818   386947   834037    468493    912733   270914   332901   851903   855978
+             512     256    81959   223770   480227   437654   528441   194152   431671    257807    667582   145131   208558   584539   695472
+             512     512   106222   295804   618371   774480   714207   364672   538918    340448    525082   323864   312370   537838   467575
+            1024       4    65218   117835   409402   473859   473232   144876   396917    187924    466094   140814   145845   557729   374687
+            1024       8    81385   187129   525969   498788   572677   196919   466296    280867    478291   179459   185537   580181   591201
+            1024      16   103613   200392   388024   369021   452921   194089   362236    352138    456095   202403   225058   703769   768219
+            1024      32    98272   210302   471001   490192   642400   277420   605538    391883    634055   256189   277815   749583   804330
+            1024      64   113273   223326   397211   360170   523788   287254   516917    436134    872286   248899   296556   722230   793189
+            1024     128   104384   221073   377154   349019   531699   300036   581516    453734    909410   238413   282716   630518   708646
+            1024     256   117039   212718   321797   337712   437244   272129   506135    434809    874417   202891   240549   585799   679067
+            1024     512   106755   189909   310199   389078   395674   241279   344788    315671    600963   143099   158049   354815   420506
+            1024    1024   102544   206918   242204   238307   227960   178371   227153    193896    263773   198264   206540   274372   273864
+            2048       4    67621   118586   295229   291611   300380   112720   300864    191565    295188   112893   115256   329421   352627
+            2048       8    81958   147391   335848   309504   377499   160689   370818    276498    327462   138108   144500   376259   403533
+            2048      16    95172   183562   358484   312057   338069   164470   380729    361440    410337   179192   182987   442442   480399
+            2048      32    97999   199201   428729   406512   495159   234615   467484    395907    398608   173454   184373   396602   404731
+            2048      64   109430   221980   395670   380172   442624   211393   334423    425248    333877   190722   205374   436484   476297
+            2048     128   105490   208768   414576   399926   471694   255327   458893    483020    950865   176432   186811   382151   396437
+            2048     256   112029   222129   368875   360001   375930   215487   323491    384874    716855   157092   176171   380594   400952
+            2048     512   100895   205560   350440   358918   357484   218058   343751    401646    843821   134833   138013   277248   284644
+            2048    1024   102057   171524   119222   203356   200433   168239   216584    197434    282323   116628   122092   230343   233417
+            2048    2048    91309   153096   178226   192846   190850   155070   195306    154891    187525   153075   158562   196566   192898
+            4096       4    66648   112502   290992   290353   289795   111273   271941    192725    267537   109812   110244   287843   282248
+            4096       8    78723   138038   323307   290741   310723   136125   332763    289985    335657   131361   130671   326664   326738
+            4096      16    91339   158845   351946   302890   343880   158858   342216    367689    343132   152596   147163   338067   341020
+            4096      32   100225   179615   324645   309247   364058   177072   349164    396857    335381   167334   165267   318956   325340
+            4096      64   105146   190974   331288   251890   281684   187813   365818    461938    363312   173390   171374   330561   332416
+            4096     128   108193   188945   312481   305785   339551   186819   345158    492304    336571   170652   168865   310516   317958
+            4096     256   106900   190078   299239   254932   297848   190413   338707    506365    966746   164082   150516   277278   293915
+            4096     512   104123   167531   258375   268734   250319   172827   267050    420099    827474   135544   127664   260807   261893
+            4096    1024    98620   157326   218346   213023   208841   158067   220015    221117    242124   116139   112130   209105   210126
+            4096    2048    93929   145650   165971   179879   184646   146995   181736    154455    191312    99717   104482   183070   181473
+            4096    4096    88738   142112   163735   171360   171423   140774   171551    142589    172702   143331   143891   172987   172688
+            8192       4    65841   110741   282065   282657   277459   109690   260419    193678    269801   106967   106454   280607   281455
+            8192       8    78737   132677   315256   290982   308596   131899   295965    292717    307058   127962   126110   313196   313079
+            8192      16    90528   154103   323935   298181   323103   155667   320762    371369    315841   144535   144240   319861   322836
+            8192      32    98090   171610   321998   295164   326245   170297   315682    405808    327891   159856   157632   323115   323553
+            8192      64   102402   183487   320338   294367   326542   183755   330043    462696    324783   165574   164260   319251   314342
+            8192     128   104471   186530   322979   294211   308746   182616   327785    469807    307704   160870   162323   308757   308248
+            8192     256   103528   181720   293578   274062   294857   179329   303496    508379    294136   146447   150201   280433   286644
+            8192     512   101430   168594   256594   244398   255992   168462   263349    452168    823642   128695   129724   243165   252691
+            8192    1024    95799   155619   209916   202450   199985   154110   210856    221903    333823   112200   111518   204121   203129
+            8192    2048    92977   145702   175608   171498   178584   144194   181762    159601    185932   104202   103452   176134   179028
+            8192    4096    92238   141487   166700   165515   171348   141248   169064    146623    169690    99166   102031   170414   168824
+            8192    8192    90378   139526   157680   167601   165843   138495   164806    139352    165531   141163   139726   166399   166068
+           16384       4    65537   107844   282103   280749   270242   107112   249130    191125    269594   105630   105330   278957   276503
+           16384       8    77659   132704   313095   288375   300982   130745   297485    293336    304009   125047   125518   308525   310062
+           16384      16    89579   151110   324307   294989   318389   150588   318730    371619    318042   142514   144111   320895   319214
+           16384      32    97572   169494   320764   295858   323352   167762   318087    401183    324660   156694   157397   322360   317809
+           16384      64   101477   179036   318910   285769   320018   176881   314648    452435    323678   161742   161881   314654   315860
+           16384     128   102795   180331   310138   277826   312082   180186   293963    426964    284701   160913   161278   308800   310074
+           16384     256   104045   179146   293153   266918   291696   178797   289843    491096    299338   148743   147959   287292   281893
+           16384     512   100875   168689   252422   239039   253092   167970   254063    446721    266575   127001   129013   248796   253007
+           16384    1024    95676   153097   201314   195896   200676   154616   204118    289716    472338   111232   110130   199120   203740
+           16384    2048    92414   145259   176177   169912   177331   144759   176145    164623    188378   103403   103192   175926   176835
+           16384    4096    90982   141026   166237   161617   166524   139707   168260    147010    164545   101305   101404   168331   169053
+           16384    8192    91386   140560   164431   161942   165147   139306   163070    143700    166585    97515   101440   168344   166060
+           16384   16384    89645   137768   152920   160325   160462   135038   162230    136345    162555   135472   137670   162533   160600
+           32768      64   100518   176971   320112   294827   326020   173802   315206    469434    321128   161501   161534   318898   321566
+           32768     128    94197   177065   310461   267112   318089   174921   311148    514523    313221   159893   160154   309672   313030
+           32768     256   103097   176990   290264   270202   299582   175632   289551    523164    291906   149130   148485   289408   294488
+           32768     512   101035   167780   253540   241526   261351   168100   251639    541467    256591   129784   128800   251369   257644
+           32768    1024    95768   153873   206025   203363   213993   154402   206577    310768    206605   111571   110994   205200   213604
+           32768    2048    91379   143551   175813   169633   177196   143577   175918    164190    185869   102097   102274   175730   177497
+           32768    4096    90523   140886   165943   151238   166411   134797   165923    147228    168261    99992   100757   167505   165933
+           32768    8192    90276   139845   164569   158580   164541   138526   165586    144846    167084    99890   100325   166179   164616
+           32768   16384    90288   140233   161049   161259   164707   138540   166524    143497    166659    95763    99373   166405   164719
+           65536      64    99673   174433   320956   298810   326104   171399   318123    472110    319315   159545   159839   319251   325261
+           65536     128   102216   178852   315098   292086   317099   176802   309199    514040    314167   159211   159476   312052   319301
+           65536     256   103198   175205   295177   277020   299460   174958   293350    541848    291703   149396   148300   293892   300441
+           65536     512   100693   166563   257401   245254   262460   166880   256944    543574    251791   130994   130085   217541   261817
+           65536    1024    95156   151218   208433   201644   210890   153517   206626    314958    208027   111076   110836   209171   212611
+           65536    2048    91462   142076   174283   167215   175081   141982   174354    161699    174642   101625   101668   174694   175282
+           65536    4096    89889   138807   164119   157697   164260   138665   164529    146819    165145    99342    99703   164013   164483
+           65536    8192    89858   138926   163703   156592   164726   138468   165742    146436    165073    99717   100152   165121   164877
+           65536   16384    90040   138813   161472   158432   164698   138326   164635    143752    164450    99469    99683   164091   164078
+          131072      64    99699   173619   326411   298937   326454   172619   321262    474723    320924   159388   159492   325895   326394
+          131072     128   102334   177498   316453   292966   318546   176234   315274    517680    315511   158517   158811   318138   319006
+          131072     256   103082   174711   297416   275855   297015   174049   296870    444329    286940   149385   149204   298919   299437
+          131072     512   100339   166579   260214   240191   259430   166266   259838    555206    256165   130764   130765   260470   259510
+          131072    1024    95586   153909   212513   201096   213837   153992   211843    325153    210439   111303   111203   212527   213064
+          131072    2048    91508   142804   173585   165672   176190   142592   176080    164782    175868   101700   101366   176033   176177
+          131072    4096    90078   139044   164617   157582   164913   138651   165129    147795    165182    99576    99553   164871   164751
+          131072    8192    90091   139102   163556   157103   163885   138561   163914    146168    164348    99535    99576   164213   163900
+          131072   16384    90186   139243   163011   157758   164480   138613   164554    146106    164729    99687    99691   164304   164366
+          262144      64    99714   173404   320209   298489   326041   172291   322327    473060    323206   158794   158988   326698   326258
+          262144     128   101915   176234   318818   291885   318585   176135   315553    519471    316594   158608   158328   318906   319312
+          262144     256   101863   174533   299916   275040   297207   174432   297790    544317    296951   149346   149257   299027   299670
+          262144     512   100486   166724   263070   244355   262700   166282   260518    556339    260549   131056   131044   262557   262988
+          262144    1024    95380   153078   211833   199591   207545   153018   210888    324728    210223   110796   110729   211268   207711
+          262144    2048    91384   142689   176506   168217   176610   142538   176400    164159    176496   101693   101779   175330   176267
+          262144    4096    89877   138476   164624   157385   164681   138474   164734    147854    165146    99457    99474   164752   164337
+          262144    8192    89777   137822   163119   156010   163126   137962   163258    146106    163272    99228    99301   163170   163176
+          262144   16384    89746   138290   163080   156668   163621   138319   163816    146164    163653    99030    99000   163817   163616
+          524288      64    99570   170849   326940   298947   326141   172346   321165    462987    324978   159041   157407   325485   325701
+          524288     128   101686   175674   320133   292759   319437   175953   316947    520033    318289   158680   155071   319095   319083
+          524288     256   102589   173927   299620   275856   298894   173725   297501    546112    298252   149043   147016   299433   299173
+          524288     512   100349   165718   260204   241624   260026   164597   259583    557023    258697   129011   130355   259933   260064
+          524288    1024    95445   153632   212357   200030   212384   153414   211822    324332    211673   111001   110483   212147   212352
+          524288    2048    91204   142710   175569   168424   176892   142584   176579    164609    176568   101606   101617   176806   176594
+          524288    4096    89824   138544   164376   157141   164100   138492   164385    152223    164688    99467    99468   164713   164703
+          524288    8192    89831   138452   163568   156551   163682   138203   163535    148260    163866    99301    99360   163519   163467
+          524288   16384    89779   138244   163085   156086   162949   137936   162678    146894    162898    98388    98517   163326   163262
+
+iozone test complete.
+Excel output is below:
+
+"Writer report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   54002  69708  80398  77564  98443 
+"128"   65641  85860  93910  107658  106042  97563 
+"256"   25934  87675  103395  108845  104828  129682  115533 
+"512"   69857  83456  97062  96365  100864  126577  81959  106222 
+"1024"   65218  81385  103613  98272  113273  104384  117039  106755  102544 
+"2048"   67621  81958  95172  97999  109430  105490  112029  100895  102057  91309 
+"4096"   66648  78723  91339  100225  105146  108193  106900  104123  98620  93929  88738 
+"8192"   65841  78737  90528  98090  102402  104471  103528  101430  95799  92977  92238  90378 
+"16384"   65537  77659  89579  97572  101477  102795  104045  100875  95676  92414  90982  91386  89645 
+"32768"   0  0  0  0  100518  94197  103097  101035  95768  91379  90523  90276  90288 
+"65536"   0  0  0  0  99673  102216  103198  100693  95156  91462  89889  89858  90040 
+"131072"   0  0  0  0  99699  102334  103082  100339  95586  91508  90078  90091  90186 
+"262144"   0  0  0  0  99714  101915  101863  100486  95380  91384  89877  89777  89746 
+"524288"   0  0  0  0  99570  101686  102589  100349  95445  91204  89824  89831  89779 
+
+"Re-writer report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   117900  153848  214781  245190  280553 
+"128"   140659  179507  246632  274080  256531  203529 
+"256"   32372  196016  234246  292508  340027  291872  328180 
+"512"   144428  212373  246644  245096  346435  358283  223770  295804 
+"1024"   117835  187129  200392  210302  223326  221073  212718  189909  206918 
+"2048"   118586  147391  183562  199201  221980  208768  222129  205560  171524  153096 
+"4096"   112502  138038  158845  179615  190974  188945  190078  167531  157326  145650  142112 
+"8192"   110741  132677  154103  171610  183487  186530  181720  168594  155619  145702  141487  139526 
+"16384"   107844  132704  151110  169494  179036  180331  179146  168689  153097  145259  141026  140560  137768 
+"32768"   0  0  0  0  176971  177065  176990  167780  153873  143551  140886  139845  140233 
+"65536"   0  0  0  0  174433  178852  175205  166563  151218  142076  138807  138926  138813 
+"131072"   0  0  0  0  173619  177498  174711  166579  153909  142804  139044  139102  139243 
+"262144"   0  0  0  0  173404  176234  174533  166724  153078  142689  138476  137822  138290 
+"524288"   0  0  0  0  170849  175674  173927  165718  153632  142710  138544  138452  138244 
+
+"Reader report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   312204  357529  647135  679917  516414 
+"128"   488594  544601  731625  692017  606767  592699 
+"256"   508929  557844  576720  592636  768712  604991  666586 
+"512"   546460  675350  694797  451454  762112  806171  480227  618371 
+"1024"   409402  525969  388024  471001  397211  377154  321797  310199  242204 
+"2048"   295229  335848  358484  428729  395670  414576  368875  350440  119222  178226 
+"4096"   290992  323307  351946  324645  331288  312481  299239  258375  218346  165971  163735 
+"8192"   282065  315256  323935  321998  320338  322979  293578  256594  209916  175608  166700  157680 
+"16384"   282103  313095  324307  320764  318910  310138  293153  252422  201314  176177  166237  164431  152920 
+"32768"   0  0  0  0  320112  310461  290264  253540  206025  175813  165943  164569  161049 
+"65536"   0  0  0  0  320956  315098  295177  257401  208433  174283  164119  163703  161472 
+"131072"   0  0  0  0  326411  316453  297416  260214  212513  173585  164617  163556  163011 
+"262144"   0  0  0  0  320209  318818  299916  263070  211833  176506  164624  163119  163080 
+"524288"   0  0  0  0  326940  320133  299620  260204  212357  175569  164376  163568  163085 
+
+"Re-Reader report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   435202  551422  571375  633392  780776 
+"128"   544601  597981  294207  618653  670413  695603 
+"256"   528987  602276  557554  560172  670332  615393  900936 
+"512"   582478  619978  680918  430978  706221  742096  437654  774480 
+"1024"   473859  498788  369021  490192  360170  349019  337712  389078  238307 
+"2048"   291611  309504  312057  406512  380172  399926  360001  358918  203356  192846 
+"4096"   290353  290741  302890  309247  251890  305785  254932  268734  213023  179879  171360 
+"8192"   282657  290982  298181  295164  294367  294211  274062  244398  202450  171498  165515  167601 
+"16384"   280749  288375  294989  295858  285769  277826  266918  239039  195896  169912  161617  161942  160325 
+"32768"   0  0  0  0  294827  267112  270202  241526  203363  169633  151238  158580  161259 
+"65536"   0  0  0  0  298810  292086  277020  245254  201644  167215  157697  156592  158432 
+"131072"   0  0  0  0  298937  292966  275855  240191  201096  165672  157582  157103  157758 
+"262144"   0  0  0  0  298489  291885  275040  244355  199591  168217  157385  156010  156668 
+"524288"   0  0  0  0  298947  292759  275856  241624  200030  168424  157141  156551  156086 
+
+"Random read report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   410573  488236  598110  633392  571375 
+"128"   488594  624409  612303  687585  653282  533241 
+"256"   512818  560172  598249  598249  817898  661657  773140 
+"512"   531055  688118  772252  582478  750656  861818  528441  714207 
+"1024"   473232  572677  452921  642400  523788  531699  437244  395674  227960 
+"2048"   300380  377499  338069  495159  442624  471694  375930  357484  200433  190850 
+"4096"   289795  310723  343880  364058  281684  339551  297848  250319  208841  184646  171423 
+"8192"   277459  308596  323103  326245  326542  308746  294857  255992  199985  178584  171348  165843 
+"16384"   270242  300982  318389  323352  320018  312082  291696  253092  200676  177331  166524  165147  160462 
+"32768"   0  0  0  0  326020  318089  299582  261351  213993  177196  166411  164541  164707 
+"65536"   0  0  0  0  326104  317099  299460  262460  210890  175081  164260  164726  164698 
+"131072"   0  0  0  0  326454  318546  297015  259430  213837  176190  164913  163885  164480 
+"262144"   0  0  0  0  326041  318585  297207  262700  207545  176610  164681  163126  163621 
+"524288"   0  0  0  0  326141  319437  298894  260026  212384  176892  164100  163682  162949 
+
+"Random write report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   129316  49382  190947  264258  279385 
+"128"   145936  184694  245616  290859  317711  217991 
+"256"   32245  186841  242883  265003  364622  335564  385433 
+"512"   142777  217978  277352  248183  347556  386947  194152  364672 
+"1024"   144876  196919  194089  277420  287254  300036  272129  241279  178371 
+"2048"   112720  160689  164470  234615  211393  255327  215487  218058  168239  155070 
+"4096"   111273  136125  158858  177072  187813  186819  190413  172827  158067  146995  140774 
+"8192"   109690  131899  155667  170297  183755  182616  179329  168462  154110  144194  141248  138495 
+"16384"   107112  130745  150588  167762  176881  180186  178797  167970  154616  144759  139707  139306  135038 
+"32768"   0  0  0  0  173802  174921  175632  168100  154402  143577  134797  138526  138540 
+"65536"   0  0  0  0  171399  176802  174958  166880  153517  141982  138665  138468  138326 
+"131072"   0  0  0  0  172619  176234  174049  166266  153992  142592  138651  138561  138613 
+"262144"   0  0  0  0  172291  176135  174432  166282  153018  142538  138474  137962  138319 
+"524288"   0  0  0  0  172346  175953  173725  164597  153414  142584  138492  138203  137936 
+
+"Backward read report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   271200  321554  443837  435202  463774 
+"128"   365764  465708  410199  540217  533241  351630 
+"256"   358056  436870  531080  467290  703721  349206  585526 
+"512"   420020  599553  699322  433939  680918  834037  431671  538918 
+"1024"   396917  466296  362236  605538  516917  581516  506135  344788  227153 
+"2048"   300864  370818  380729  467484  334423  458893  323491  343751  216584  195306 
+"4096"   271941  332763  342216  349164  365818  345158  338707  267050  220015  181736  171551 
+"8192"   260419  295965  320762  315682  330043  327785  303496  263349  210856  181762  169064  164806 
+"16384"   249130  297485  318730  318087  314648  293963  289843  254063  204118  176145  168260  163070  162230 
+"32768"   0  0  0  0  315206  311148  289551  251639  206577  175918  165923  165586  166524 
+"65536"   0  0  0  0  318123  309199  293350  256944  206626  174354  164529  165742  164635 
+"131072"   0  0  0  0  321262  315274  296870  259838  211843  176080  165129  163914  164554 
+"262144"   0  0  0  0  322327  315553  297790  260518  210888  176400  164734  163258  163816 
+"524288"   0  0  0  0  321165  316947  297501  259583  211822  176579  164385  163535  162678 
+
+"Record rewrite report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   142875  200653  248136  274809  280553 
+"128"   170879  231429  239268  327199  338761  198414 
+"256"   168092  264741  335564  357937  414283  341759  375459 
+"512"   177348  285425  348063  374269  357032  468493  257807  340448 
+"1024"   187924  280867  352138  391883  436134  453734  434809  315671  193896 
+"2048"   191565  276498  361440  395907  425248  483020  384874  401646  197434  154891 
+"4096"   192725  289985  367689  396857  461938  492304  506365  420099  221117  154455  142589 
+"8192"   193678  292717  371369  405808  462696  469807  508379  452168  221903  159601  146623  139352 
+"16384"   191125  293336  371619  401183  452435  426964  491096  446721  289716  164623  147010  143700  136345 
+"32768"   0  0  0  0  469434  514523  523164  541467  310768  164190  147228  144846  143497 
+"65536"   0  0  0  0  472110  514040  541848  543574  314958  161699  146819  146436  143752 
+"131072"   0  0  0  0  474723  517680  444329  555206  325153  164782  147795  146168  146106 
+"262144"   0  0  0  0  473060  519471  544317  556339  324728  164159  147854  146106  146164 
+"524288"   0  0  0  0  462987  520033  546112  557023  324332  164609  152223  148260  146894 
+
+"Stride read report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   444572  576282  571375  492717  529661 
+"128"   398625  826202  419822  666253  649331  348661 
+"256"   428843  515032  882426  699594  828628  627623  680960 
+"512"   367291  503418  728502  850554  717069  912733  667582  525082 
+"1024"   466094  478291  456095  634055  872286  909410  874417  600963  263773 
+"2048"   295188  327462  410337  398608  333877  950865  716855  843821  282323  187525 
+"4096"   267537  335657  343132  335381  363312  336571  966746  827474  242124  191312  172702 
+"8192"   269801  307058  315841  327891  324783  307704  294136  823642  333823  185932  169690  165531 
+"16384"   269594  304009  318042  324660  323678  284701  299338  266575  472338  188378  164545  166585  162555 
+"32768"   0  0  0  0  321128  313221  291906  256591  206605  185869  168261  167084  166659 
+"65536"   0  0  0  0  319315  314167  291703  251791  208027  174642  165145  165073  164450 
+"131072"   0  0  0  0  320924  315511  286940  256165  210439  175868  165182  164348  164729 
+"262144"   0  0  0  0  323206  316594  296951  260549  210223  176496  165146  163272  163653 
+"524288"   0  0  0  0  324978  318289  298252  258697  211673  176568  164688  163866  162898 
+
+"Fwrite report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   106319  128265  159991  134769  266620 
+"128"   123084  166481  114917  200339  164744  164542 
+"256"   130406  178516  193963  181442  264481  182863  365242 
+"512"   112552  161710  230743  227251  181102  270914  145131  323864 
+"1024"   140814  179459  202403  256189  248899  238413  202891  143099  198264 
+"2048"   112893  138108  179192  173454  190722  176432  157092  134833  116628  153075 
+"4096"   109812  131361  152596  167334  173390  170652  164082  135544  116139  99717  143331 
+"8192"   106967  127962  144535  159856  165574  160870  146447  128695  112200  104202  99166  141163 
+"16384"   105630  125047  142514  156694  161742  160913  148743  127001  111232  103403  101305  97515  135472 
+"32768"   0  0  0  0  161501  159893  149130  129784  111571  102097  99992  99890  95763 
+"65536"   0  0  0  0  159545  159211  149396  130994  111076  101625  99342  99717  99469 
+"131072"   0  0  0  0  159388  158517  149385  130764  111303  101700  99576  99535  99687 
+"262144"   0  0  0  0  158794  158608  149346  131056  110796  101693  99457  99228  99030 
+"524288"   0  0  0  0  159041  158680  149043  129011  111001  101606  99467  99301  98388 
+
+"Re-Fwrite report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   120331  167583  192730  173429  278516 
+"128"   138554  147946  143671  245168  195737  183432 
+"256"   135167  188514  223379  204959  320347  267512  374935 
+"512"   118824  158605  249858  268912  216222  332901  208558  312370 
+"1024"   145845  185537  225058  277815  296556  282716  240549  158049  206540 
+"2048"   115256  144500  182987  184373  205374  186811  176171  138013  122092  158562 
+"4096"   110244  130671  147163  165267  171374  168865  150516  127664  112130  104482  143891 
+"8192"   106454  126110  144240  157632  164260  162323  150201  129724  111518  103452  102031  139726 
+"16384"   105330  125518  144111  157397  161881  161278  147959  129013  110130  103192  101404  101440  137670 
+"32768"   0  0  0  0  161534  160154  148485  128800  110994  102274  100757  100325  99373 
+"65536"   0  0  0  0  159839  159476  148300  130085  110836  101668  99703  100152  99683 
+"131072"   0  0  0  0  159492  158811  149204  130765  111203  101366  99553  99576  99691 
+"262144"   0  0  0  0  158988  158328  149257  131044  110729  101779  99474  99301  99000 
+"524288"   0  0  0  0  157407  155071  147016  130355  110483  101617  99468  99360  98517 
+
+"Fread report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   286849  467002  503814  359444  477808 
+"128"   499970  408949  509943  606767  492178  430942 
+"256"   466275  585845  585845  474937  802014  663292  716876 
+"512"   355319  438011  755144  748563  435700  851903  584539  537838 
+"1024"   557729  580181  703769  749583  722230  630518  585799  354815  274372 
+"2048"   329421  376259  442442  396602  436484  382151  380594  277248  230343  196566 
+"4096"   287843  326664  338067  318956  330561  310516  277278  260807  209105  183070  172987 
+"8192"   280607  313196  319861  323115  319251  308757  280433  243165  204121  176134  170414  166399 
+"16384"   278957  308525  320895  322360  314654  308800  287292  248796  199120  175926  168331  168344  162533 
+"32768"   0  0  0  0  318898  309672  289408  251369  205200  175730  167505  166179  166405 
+"65536"   0  0  0  0  319251  312052  293892  217541  209171  174694  164013  165121  164091 
+"131072"   0  0  0  0  325895  318138  298919  260470  212527  176033  164871  164213  164304 
+"262144"   0  0  0  0  326698  318906  299027  262557  211268  175330  164752  163170  163817 
+"524288"   0  0  0  0  325485  319095  299433  259933  212147  176806  164713  163519  163326 
+
+"Re-Fread report"
+        "4"  "8"  "16"  "32"  "64"  "128"  "256"  "512"  "1024"  "2048"  "4096"  "8192"  "16384"
+"64"   378715  503814  659861  385237  587635 
+"128"   547377  387686  537512  677178  517812  621518 
+"256"   519266  618584  510866  576411  792543  716876  856386 
+"512"   392678  466255  798675  784094  606667  855978  695472  467575 
+"1024"   374687  591201  768219  804330  793189  708646  679067  420506  273864 
+"2048"   352627  403533  480399  404731  476297  396437  400952  284644  233417  192898 
+"4096"   282248  326738  341020  325340  332416  317958  293915  261893  210126  181473  172688 
+"8192"   281455  313079  322836  323553  314342  308248  286644  252691  203129  179028  168824  166068 
+"16384"   276503  310062  319214  317809  315860  310074  281893  253007  203740  176835  169053  166060  160600 
+"32768"   0  0  0  0  321566  313030  294488  257644  213604  177497  165933  164616  164719 
+"65536"   0  0  0  0  325261  319301  300441  261817  212611  175282  164483  164877  164078 
+"131072"   0  0  0  0  326394  319006  299437  259510  213064  176177  164751  163900  164366 
+"262144"   0  0  0  0  326258  319312  299670  262988  207711  176267  164337  163176  163616 
+"524288"   0  0  0  0  325701  319083  299173  260064  212352  176594  164703  163467  163262 
+
+real	14m34.837s
+user	0m47.578s
+sys	13m17.443s</code></pre></div>
+
+<!-- raw HTML omitted -->
+<p>IOzone <em>writer report</em> plotted with LibreOffice Calc.
+<figure><img src="https://www.gaborsamu.com/images/unmatched_writer.png" />
+</figure>
+</p>
+
+<p>IOzone <em>reader report</em> plotted with LibreOffice Calc.
+<figure><img src="https://www.gaborsamu.com/images/unmatched_reader.png" />
+</figure>
+</p>
+
+<p><strong>High Performance Conjugate Gradient Benchmark (HPCG)</strong></p>
+
+<p><a href="http://www.hpcg-benchmark.org/">HPCG</a> is another benchmark for ranking HPC
+systems. As per the <a href="https://www.hpcg-benchmark.org/">HPCG page</a> it&rsquo;s <em>&hellip;designed to exercise computational and
+data access patterns that more closely match a different and broad set of
+important applications, and to give incentive to computer system designers
+to invest in capabilities that will have impact on the collective performance
+of these applications.</em> In other words, it&rsquo;s designed to give a more rounded
+assessment of the capabilites of a system as opposed to HPL. HPCG may provide
+a more rounded assessment of a system and how it will perform with real
+world applications.</p>
+
+<p>Like HPL, I built HPCG using the standard Ubuntu supplied compilers, OpenMPI
+and other libraries. So this is not really considered to be an optimized run.</p>
+
+<p>The result from the HPCG run follows:</p>
+
+<div class="highlight"><pre><code class="language-plaintext">Final Summary=
+Final Summary::HPCG result is VALID with a GFLOP/s rating of=0.167441
+Final Summary::HPCG 2.4 rating for historical reasons is=0.168344
+Final Summary::Reference version of ComputeDotProduct used=Performance results a
+re most likely suboptimal
+Final Summary::Reference version of ComputeSPMV used=Performance results are mos
+t likely suboptimal
+Final Summary::Reference version of ComputeMG used=Performance results are most 
+likely suboptimal
+Final Summary::Reference version of ComputeWAXPBY used=Performance results are m
+ost likely suboptimal
+Final Summary::Results are valid but execution time (sec) is=761.216
+Final Summary::Official results execution time (sec) must be at least=1800</code></pre></div>
+
+<!-- raw HTML omitted -->
+<div class="highlight"><pre><code class="language-plaintext">ubuntu@unmatched:~/hpcg/bin$ more HPCG-Benchmark_3.1_2021-07-08_19-18-43.txt 
+HPCG-Benchmark
+version=3.1
+Release date=March 28, 2019
+Machine Summary=
+Machine Summary::Distributed Processes=4
+Machine Summary::Threads per processes=1
+Global Problem Dimensions=
+Global Problem Dimensions::Global nx=240
+Global Problem Dimensions::Global ny=240
+Global Problem Dimensions::Global nz=120
+Processor Dimensions=
+Processor Dimensions::npx=2
+Processor Dimensions::npy=2
+Processor Dimensions::npz=1
+Local Domain Dimensions=
+Local Domain Dimensions::nx=120
+Local Domain Dimensions::ny=120
+Local Domain Dimensions::Lower ipz=0
+Local Domain Dimensions::Upper ipz=0
+Local Domain Dimensions::nz=120
+########## Problem Summary  ##########=
+Setup Information=
+Setup Information::Setup Time=41.0377
+Linear System Information=
+Linear System Information::Number of Equations=6912000
+Linear System Information::Number of Nonzero Terms=184557592
+Multigrid Information=
+Multigrid Information::Number of coarse grid levels=3
+Multigrid Information::Coarse Grids=
+Multigrid Information::Coarse Grids::Grid Level=1
+Multigrid Information::Coarse Grids::Number of Equations=864000
+Multigrid Information::Coarse Grids::Number of Nonzero Terms=22813192
+Multigrid Information::Coarse Grids::Number of Presmoother Steps=1
+Multigrid Information::Coarse Grids::Number of Postsmoother Steps=1
+Multigrid Information::Coarse Grids::Grid Level=2
+Multigrid Information::Coarse Grids::Number of Equations=108000
+Multigrid Information::Coarse Grids::Number of Nonzero Terms=2788192
+Multigrid Information::Coarse Grids::Number of Presmoother Steps=1
+Multigrid Information::Coarse Grids::Number of Postsmoother Steps=1
+Multigrid Information::Coarse Grids::Grid Level=3
+Multigrid Information::Coarse Grids::Number of Equations=13500
+Multigrid Information::Coarse Grids::Number of Nonzero Terms=332992
+Multigrid Information::Coarse Grids::Number of Presmoother Steps=1
+Multigrid Information::Coarse Grids::Number of Postsmoother Steps=1
+########## Memory Use Summary  ##########=
+Memory Use Information=
+Memory Use Information::Total memory used for data (Gbytes)=4.94251
+Memory Use Information::Memory used for OptimizeProblem data (Gbytes)=0
+Memory Use Information::Bytes per equation (Total memory / Number of Equations)=
+715.063
+Memory Use Information::Memory used for linear system and CG (Gbytes)=4.3495
+Memory Use Information::Coarse Grids=
+Memory Use Information::Coarse Grids::Grid Level=1
+Memory Use Information::Coarse Grids::Memory used=0.519816
+Memory Use Information::Coarse Grids::Grid Level=2
+Memory Use Information::Coarse Grids::Memory used=0.0650476
+Memory Use Information::Coarse Grids::Grid Level=3
+Memory Use Information::Coarse Grids::Memory used=0.00814937
+########## V&amp;V Testing Summary  ##########=
+Spectral Convergence Tests=
+Spectral Convergence Tests::Result=PASSED
+Spectral Convergence Tests::Unpreconditioned=
+Spectral Convergence Tests::Unpreconditioned::Maximum iteration count=11
+Spectral Convergence Tests::Unpreconditioned::Expected iteration count=12
+Spectral Convergence Tests::Preconditioned=
+Spectral Convergence Tests::Preconditioned::Maximum iteration count=2
+Spectral Convergence Tests::Preconditioned::Expected iteration count=2
+Departure from Symmetry |x'Ay-y'Ax|/(2*||x||*||A||*||y||)/epsilon=
+Departure from Symmetry |x'Ay-y'Ax|/(2*||x||*||A||*||y||)/epsilon::Result=PASSED
+Departure from Symmetry |x'Ay-y'Ax|/(2*||x||*||A||*||y||)/epsilon::Departure for
+ SpMV=2.57379e-08
+Departure from Symmetry |x'Ay-y'Ax|/(2*||x||*||A||*||y||)/epsilon::Departure for
+ MG=1.89158e-08
+########## Iterations Summary  ##########=
+Iteration Count Information=
+Iteration Count Information::Result=PASSED
+Iteration Count Information::Reference CG iterations per set=50
+Iteration Count Information::Optimized CG iterations per set=50
+Iteration Count Information::Total number of reference iterations=50
+Iteration Count Information::Total number of optimized iterations=50
+########## Reproducibility Summary  ##########=
+Reproducibility Information=
+Reproducibility Information::Result=PASSED
+Reproducibility Information::Scaled residual mean=0.000139647
+Reproducibility Information::Scaled residual variance=0
+########## Performance Summary (times in sec) ##########=
+Benchmark Time Summary=
+Benchmark Time Summary::Optimization phase=1e-06
+Benchmark Time Summary::DDOT=20.1473
+Benchmark Time Summary::WAXPBY=14.5966
+Benchmark Time Summary::SpMV=103.923
+Benchmark Time Summary::MG=622.465
+Benchmark Time Summary::Total=761.216
+Floating Point Operations Summary=
+Floating Point Operations Summary::Raw DDOT=2.08742e+09
+Floating Point Operations Summary::Raw WAXPBY=2.08742e+09
+Floating Point Operations Summary::Raw SpMV=1.88249e+10
+Floating Point Operations Summary::Raw MG=1.05146e+11
+Floating Point Operations Summary::Total=1.28146e+11
+Floating Point Operations Summary::Total with convergence overhead=1.28146e+11
+GB/s Summary=
+GB/s Summary::Raw Read B/W=1.03717
+GB/s Summary::Raw Write B/W=0.23969
+GB/s Summary::Raw Total B/W=1.27686
+GB/s Summary::Total with convergence and optimization phase overhead=1.27001
+GFLOP/s Summary=
+GFLOP/s Summary::Raw DDOT=0.103608
+GFLOP/s Summary::Raw WAXPBY=0.143007
+GFLOP/s Summary::Raw SpMV=0.181142
+GFLOP/s Summary::Raw MG=0.168919
+GFLOP/s Summary::Raw Total=0.168344
+GFLOP/s Summary::Total with convergence overhead=0.168344
+GFLOP/s Summary::Total with convergence and optimization phase overhead=0.167441
+User Optimization Overheads=
+User Optimization Overheads::Optimization phase time (sec)=1e-06
+User Optimization Overheads::Optimization phase time vs reference SpMV+MG time=6
+.85121e-08
+DDOT Timing Variations=
+DDOT Timing Variations::Min DDOT MPI_Allreduce time=6.31348
+DDOT Timing Variations::Max DDOT MPI_Allreduce time=10.9565
+DDOT Timing Variations::Avg DDOT MPI_Allreduce time=8.88789
+Final Summary=
+Final Summary::HPCG result is VALID with a GFLOP/s rating of=0.167441
+Final Summary::HPCG 2.4 rating for historical reasons is=0.168344
+Final Summary::Reference version of ComputeDotProduct used=Performance results a
+re most likely suboptimal
+Final Summary::Reference version of ComputeSPMV used=Performance results are mos
+t likely suboptimal
+Final Summary::Reference version of ComputeMG used=Performance results are most 
+likely suboptimal
+Final Summary::Reference version of ComputeWAXPBY used=Performance results are m
+ost likely suboptimal
+Final Summary::Results are valid but execution time (sec) is=761.216
+Final Summary::Official results execution time (sec) must be at least=1800</code></pre></div>
+
+<!-- raw HTML omitted -->
+<p><strong>syslog-ng</strong></p>
+
+<p>And for something different to close out. Peter Czanik of One Identity ran
+through some benchmarks of syslog-ng on Unmatched. Peter noted that
+the Unmatched is between the Raspberry Pi 3 and the SolidRun macchitoBIN.
+The boards were tested using a simple script generating various synthetic
+loads for stress testing of syslog-ng.  The Raspberry Pi 3 was only
+faster when there was a low number of concurrent connections using a
+complex configuration. For all other tests of syslog-ng, the Unmatched
+board was faster. For higher loads, performance of the Unmatched board
+was close to the macchiatoBIN, which is a quad-core Cortex A-72 based
+board. For the sake of comparison, the same syslog-ng benchmarks ran
+more than 15x faster on an entry level AMD Ryzen desktop CPU.</p>
+
+<p>syslog-ng benchmark results.
+<figure><img src="https://www.gaborsamu.com/images/syslog-ng.jpg" />
+</figure>
+</p>
+
+<p>For more details, feel free to reach out to Peter on Twitter.</p>
+
+<blockquote class="twitter-tweet"><p dir="ltr" lang="en">Thanks to <a href="https://twitter.com/gabor_samu?ref_src=twsrc%5Etfw">@gabor_samu</a> I had some remote access to a <a href="https://twitter.com/SiFive?ref_src=twsrc%5Etfw">@SiFive</a> Unmatched <a href="https://twitter.com/hashtag/RiscV?src=hash&amp;ref_src=twsrc%5Etfw">#RiscV</a> board. Of course I tested it with syslog-ng. It's performance seems to be better than <a href="https://twitter.com/Raspberry_Pi?ref_src=twsrc%5Etfw">@Raspberry_Pi</a> 3 but slightly slower than a <a href="https://twitter.com/solid_run?ref_src=twsrc%5Etfw">@solid_run</a> MacchiatoBIN.<a href="https://t.co/ObM9LTgtq1">https://t.co/ObM9LTgtq1</a></p>
+&mdash; Peter Czanik (@PCzanik) <a href="https://twitter.com/PCzanik/status/1403019715375665156?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote>
+
+<p>That concludes this post. What struck me was how easily I could compile
+things such as HPL, HPCG on the system. Certainly, there are no record
+breaking results to report here, but that was anticipated. Personally, I&rsquo;m
+really keen to see how RISCV develops over time. Indeed, it&rsquo;s certainly
+something which is being eyed for HPC. Take for example the <a href="https://www.european-processor-initiative.eu/">European Processor
+Initiative (EPI)</a> where the
+(vector) accelerator will rely upon RISCV. So I&rsquo;d wager that the future is
+bright for RISCV in HPC - and as the saying goes, <em>variety is the
+spice of life</em>.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2021/to-compete-your-team-needs-a-specialty/">< To Compete, Your Team Needs a Specialty</a>
+	 
+	<a class="next" href="/personal-blog/2021/uptodate/">Uptodate ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
