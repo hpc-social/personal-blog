@@ -1,7 +1,6 @@
 name: Update Site
 
 on:
-  pull_request: {}
   workflow_dispatch:
   schedule:
   - cron: 30 1 * * *
