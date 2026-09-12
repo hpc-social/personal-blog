@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Very risqué computing - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2021-06-16T00:57:31-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2021/very-risqu%C3%A9-computing/"/>
+        <meta property="og:title" content="Very risqué computing - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Very risqué computing - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">16.06.2021  &middot; <span class="reading-time" title="Estimated read time">
+  
+   5 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/very-risqué-computing&amp;text=Very risqué computing - https://hpc.social/very-risqué-computing" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/risque_computing/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Very risqué computing</h1>
+	<p>This spring, we’ve been blessed with fantastic and almost tropical weather here
+in Southern Ontario, Canada. Normally at this time, after a long winter the last
+thing on my mind are indoor activities. However on June 3rd, I was greeted one
+morning by an email about an incoming delivery. It turns out it was on of the
+items I&rsquo;ve been waiting patiently for from [Crowd Supply](<a href="https://www.crowdsuppl">https://www.crowdsuppl</a>
+y.com/) in the hopes of keeping me busy during what I thought would be a cold
+spring season.</p>
+
+<p><strong>Christmas in June</strong></p>
+
+<p>As I have multiple things from Crowd Supply on order (don&rsquo;t ask!) I didn&rsquo;t quite
+know which item was arriving. It turns out it was the long awaited <a href="https://www.sifive.com/boards/hifive-unmatched">SiFive
+HiFive Unmatched</a> RISCV powered
+board. Those who know me (and I&rsquo;ve said this many times) understand that I don&rsquo;t
+like mainstream anything. And that also applies to computers. My interest in Arm
+based systems dates from the 1990&rsquo;s with the venerable Acorn Archimedes
+computers. However, all of the news around the RISCV community has really piqued
+my interest. I passed on the SiFive Unleashed primarily because it didn&rsquo;t have a
+PCIe slot - although this was remedied with an optional, but costly add-on
+board.</p>
+
+<p>So when the SiFive Unmatched was announced with a competitive price and a bump
+to 16GB I jumped at the opportunity to purchase one. And it turned out to be a
+great decision.</p>
+
+<p>The HiFive Unmatched is based on the SiFive Freedom U740 SOC with four U74 cores
+and one S7 core and features an all important PCIe slot. With 16GB of onboard
+RAM and a M.2 Key M for an SSD, my goal was to get the Unmatched setup as a desk
+top. For those looking to learn more about RISCV, I&rsquo;d recommend starting with
+the RISCV International foundation <a href="https://riscv.org/">site</a>. As per the RISCV
+site, &ldquo;RISC-V is a free and open ISA enabling a new era of processor innovation
+through open standard collaboration.&rdquo; In simple terms, the ISA or instruction
+set architecture defines the set of instructions that are supported by the
+processor – so things like arithmetic, logic, and branch instructions to name
+a few. So it’s the way that programmers can issue commands to the processor to
+do “things”.</p>
+
+<p><strong>First impressions</strong></p>
+
+<p>I’ve become accustomed to developer boards being packaged in rather non-descript
+packaging. The first impression of the Unmatched board could not be further from
+this. The board was shipped in a lovely box and included an SD card with a
+bootable Freedom U SDK image and I/O shield and a USB cable. So the first
+impression for me was quite positive.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/unmatched_collage.jpg" />
+</figure>
+
+<p><strong>Bootstrapping</strong></p>
+
+<p>I mounted the Unmatched board to my Streacom BC1 benchmark table and installed
+a XFX Radeon 2GB Heatsink edition to the PCIe slot. It’s an old GPU, but fanless
+– which I always appreciate. Plus, I’m not looking to do any serious gaming on
+the system.</p>
+
+<p>The first boot of the system from the SD card was a success (albeit a bit slow).
+I monitored the boot over the serial console (minicom) from another system. The
+Unmatched sprang to life and eventually booted up to a fully working XFCE
+desktop. This was actually a lot smoother than what I anticipated. Once I
+confirmed that everything was working as expected, I installed a Samsung 780
+NVME SSD to the M.2 Key M slot and turned my focus to Ubuntu 21.04. The <a href="https://forums.sifive.com/">SiFive
+Forums</a> have proven an invaluable resource to help
+me get Ubuntu up and runing on the system and to make sure the board was booting
+Ubuntu with a clock of 1.2 Ghz. Of course, I followed the steps to install
+Ubuntu to the NVME onboard, so I/O performance is much better now naturally.</p>
+
+<p><strong>Burning in</strong></p>
+
+<p>Does it run Linpack?  Of course it does :) As with any new board I receive,
+running a High Performance Linpack benchmark is often one of the first things I
+do. It’s a well known bechmark which provides data for the Top500 ranking of
+supercomputers.</p>
+
+<p>I used the current <a href="https://www.netlib.org/benchmark/hpl/">HPL v2.3</a> and
+compiled it using the Ubuntu supplied gcc, openmpi and math libraries.
+A few runs of HPL yielded a result of <em>2 GFlops</em> (see screenshots below).
+Although I&rsquo;ve not looked closely at what the theoretical peak of the U740 SOC
+is, the result is roughly what I expected given what I&rsquo;ve been reading up on
+the board. Ultimately, I was pleased that HPL compiled and ran to completion and it was a great way to stress the board.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/linpack_collage.jpg" />
+</figure>
+
+<p>Stay tuned to this channel for more risqué computing escapades&hellip;</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2021/research-computing-funding-should-mostly-just-go-to-researchers/">< Research Computing Funding Should Mostly Just Go To Researchers</a>
+	 
+	<a class="next" href="/personal-blog/2021/ceph-crimson-2021-q2-project-update/">Ceph Crimson 2021 Q2 Project Update ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
