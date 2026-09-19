@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Adam’s weekly (-ish) update, 2022-12-20 - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2022-12-20T18:14:52-07:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2022/adam-s-weekly-ish-update-2022-12-20/"/>
+        <meta property="og:title" content="Adam’s weekly (-ish) update, 2022-12-20 - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Adam’s weekly (-ish) update, 2022-12-20 - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">20.12.2022  &middot; <span class="reading-time" title="Estimated read time">
+  
+   5 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/adam-s-weekly-ish-update-2022-12-20&amp;text=Adam’s weekly (-ish) update, 2022-12-20 - https://hpc.social/adam-s-weekly-ish-update-2022-12-20" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://thinking.ajdecon.org">Computing – thinking out loud</a>&nbsp;works in progress and scattered thoughts, often about computers.&nbsp;See the original post&nbsp;<a target="_blank" href="https://thinking.ajdecon.org/2022/12/20/adams-weekly-ish-update-2022-12-20/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Adam’s weekly (-ish) update, 2022-12-20</h1>
+	<h2>What&#8217;s new</h2>
+
+<p>The past few weeks have been on the intense side at work, so I completely lost track of the blog and haven&#8217;t had a chance to write much in that time. However, I&#8217;m now on a holiday break, and finally have time to sit down at a keyboard to write more than code and Slack messages.</p>
+
+<p><span id="more-289"></span></p>
+
+<p>One of the highlights of the past few weeks was a trip to San Jose, and the NVIDIA headquarters. I changed teams at work back in July, transferring from a group that was closely integrated with product management, to a more straightforward engineering team which <a href="https://blogs.nvidia.com/blog/2020/08/14/making-selene-pandemic-ai/">designs and builds new high-performance computing systems</a>. </p>
+
+<p>This was the first chance I&#8217;ve had to meet up with other members of my new team in person, and it was a really wonderful experience to be in the same physical space as folks who were previously just images on my screen. I love working remotely, but it&#8217;s also great to be able to stand in front of a white board with someone and brainstorm, or get coffee and just have a chat with a coworker outside of a video call with an agenda.</p>
+
+<p>(Plus, we were all careful and managed to avoid catching COVID from each other! Which was a win on its own.)</p>
+
+<p>Now, for the next two weeks I&#8217;m off work, and planning to take some time to relax and spend time on projects that are harder to focus on during busy work weeks. Expect (maybe) less about computers in my blog and social feeds, and more about D&amp;D, baking, and tasty cocktails.</p>
+
+<h2>What I&#8217;m reading, watching, and listening to</h2>
+
+<p>I&#8217;ve been a bit too scattered to focus on actual books the past few weeks, but I did find time for a few interesting articles and podcasts. In particular,</p>
+
+<ul>
+<li><a href="https://acoup.blog/2022/12/02/collections-why-roman-egypt-was-such-a-strange-province/">&#8220;Why Roman Egypt was such a strange province&#8221;</a>, from Bret Devereaux: As usual from Devereaux, an accessible but extremely detailed discussion of why so much of what we know about the Roman empire is from Egyptian records, but why that also might not be representative of the broader empire.</li>
+
+
+
+<li><a href="https://willgallego.com/2022/12/18/emoji-as-incident-resolution-tools/">&#8220;Emoji as incident resolution tools&#8221;</a>, from Will Gallego: A fun discussion of how using emoji as part of a team&#8217;s communication can add nuance and shared understanding during incident management, along with a discussion of the disadvantages and costs associated with the practice.</li>
+
+
+
+<li><a href="https://www.mikulskibartosz.name/modern-software-architecture-in-2022/">&#8220;What does modern software architecture look like in 2022?&#8221;</a>, from Bartosz Mikulski: A nice  article which discusses how service-oriented software architecture can often include an explicit expectation of change. For example, the architecture might include notes on an ongoing deprecation of a library, or might signpost the need to factor a new microservice out when overall system load gets high enough.</li>
+
+
+
+<li><a href="https://www.bradyheywood.com.au/podcasts/">The Brady Heywood podcast</a>: Found via the <a href="https://oxide.computer/podcasts/oxide-and-friends/1137359">Oxide and Friends podcast</a>, the Brady Heywood podcast is a series on engineering disasters and their consequences from a forensic engineering firm. It&#8217;s mostly not being updated any more (with the podcasters moving on to a separate series on complexity science), but it has a deep back catalog of good episodes, and includes thoughtful discussions of human factors, safety engineering, and how organizational pressures become manifest in engineering artifacts.</li>
+</ul>
+
+<h2>Recent recipes</h2>
+
+<ul>
+<li><a href="https://smittenkitchen.com/2016/12/homemade-irish-cream/">Smitten Kitchen&#8217;s Homemade Irish Cream</a>: This is a recipe I make every year, and I often give away small bottles of it as holiday gifts. It&#8217;s really ridiculously tasty, much better than Baileys  or similar, and good either on its own or in hot chocolate.</li>
+
+
+
+<li><a href="https://smittenkitchen.com/2014/12/fairytale-of-new-york/">Smitten Kitchen&#8217;s Fairytale of New York</a>: This is a really tasty whiskey cocktail, and the star of the show is a &#8220;winter warmth syrup&#8221; that substitutes in for simple syrup. The syrup is simply very tasty, and turns what&#8217;s effectively an OId Fashioned variant into a lovely holiday cocktail.</li>
+
+
+
+<li>Sparkling gingerbread from <a href="http://www.apt2bbakingco.com/snacking-cakes">Yossy Arefi&#8217;s Snaking Cakes</a>: This recipe takes a little more prep than most of Arefi&#8217;s &#8220;snacking cakes&#8221;, as it includes ginger three ways (ground, fresh, and crystallized), but it&#8217;s worth the few minutes of extra work.</li>
+</ul>
+
+<h2>Pet photos</h2>
+
+<figure class="wp-block-image size-large is-resized"><img alt="A white calico cat and a gray tabby cat lounging on a large brown pet bed in front of a gas fireplace." class="wp-image-295" height="512" src="https://thinking.ajdecon.org/wp-content/uploads/2022/12/IMG_7207-768x1024.jpeg" width="384" /><figcaption class="wp-element-caption">I&#8217;m pretty sure these two want me to turn the fireplace on.</figcaption></figure>
+
+<figure class="wp-block-image size-large is-resized"><img alt="A gray tabby cat lounges on a dog bed, while a golden doodle lays on the floor nearby and looks forlornly at the bed." class="wp-image-294" height="512" src="https://thinking.ajdecon.org/wp-content/uploads/2022/12/IMG_1725-1024x1024.jpeg" width="512" /><figcaption class="wp-element-caption">Just Percy bullying the dog by stealing his bed.</figcaption></figure>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2022/visualizing-spectrum-lsf-data-with-grafana/">< Visualizing Spectrum LSF data with Grafana</a>
+	 
+	<a class="next" href="/personal-blog/2023/monitoring-ibm-spectrum-lsf-with-the-tig-stack/">Monitoring .-.. ... ..-. (IBM Spectrum LSF) with the TIG stack ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
