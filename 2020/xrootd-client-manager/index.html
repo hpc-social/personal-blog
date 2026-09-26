@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>XRootD Client Manager - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2020-10-11T06:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2020/xrootd-client-manager/"/>
+        <meta property="og:title" content="XRootD Client Manager - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="XRootD Client Manager - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">11.10.2020  &middot; <span class="reading-time" title="Estimated read time">
+  
+   5 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/xrootd-client-manager&amp;text=XRootD Client Manager - https://hpc.social/xrootd-client-manager" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://derekweitzel.com/">Dereks Web</a>&nbsp;Thoughts from Derek.&nbsp;See the original post&nbsp;<a target="_blank" href="https://derekweitzel.com/2020/10/11/xrootd-client-manager/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>XRootD Client Manager</h1>
+	<p>The validation project for XRootD Monitoring is moving to phase 2, scale
+testing.  Phase 1 focused on correctness of single server monitoring.  <a href="https://doi.org/10.5281/zenodo.3981359">The
+report</a> is available.</p>
+
+<p>We are still forming the testing plan for the scale test of XRootD, but a
+component of the testing will be multiple clients downloading from multiple
+servers.  In addition, we must record exactly how much data each client reads
+from each server in order to validate the monitoring with the client’s real behavior.</p>
+
+<p>This level of testing will require detailed coordination and recording of client
+actions.  I am not aware of a testing framework that can coordinate and record
+accesses of multiple clients and servers, therefore I spent the weekend
+developing a simple framework for coordinating these tests.</p>
+
+<p>Some requirements for the application are:</p>
+
+<ul>
+  <li>Easy to use interface</li>
+  <li>Easy to add clients and servers</li>
+  <li>Authenticated access for clients, servers, and interface</li>
+  <li>Storage of tests and results</li>
+</ul>
+
+<p>I chose <a href="https://heroku.com">Heroku</a> for prototyping this application.</p>
+
+<h2 id="interface">Interface</h2>
+
+<p>The web interface is available at https://xrootd-client-manager.herokuapp.com/.
+I chose to host it on heroku as it is my go to for pet projects.  I will likely
+move this over to OSG’s production kubernetes installation soon.  The entire
+application is only the web interface and a back-end <a href="https://redis.io/">Redis</a>
+data store.</p>
+
+<figure class="">
+  <img alt="Screenshot of web interface" src="https://derekweitzel.com/images/posts/XRootDClientManager/Interface.png" /><figcaption>
+      Screenshot of simple web interface
+
+    </figcaption></figure>
+
+<p>The web interface shows the connected clients and servers.  The web interface
+also connects to the web server with an persistent connection to update the list
+of connected clients.</p>
+
+<h2 id="client-communication">Client Communication</h2>
+
+<p>Client communcation is handled through a Socket.IO connection.  Socket.IO is a
+library that will at create a bi-directional event based communcation between
+the client and the server.  The communcation is over websockets if possible, but
+will fall back to HTTP long polling.  A good discussion of long polling vs.
+websockets is available from
+<a href="https://www.ably.io/blog/websockets-vs-long-polling/">Ably</a>.  The Socket.IO
+connection is established between each worker, server, and web client and the
+web server.</p>
+
+<p>The difficult part is authenticating the Socket.IO connections.  We discuss this
+in the security session.</p>
+
+<h2 id="security">Security</h2>
+<p>Securing the commands and web interface is required since the web interface is
+sending commands to the connected worker nodes and servers.</p>
+
+<h3 id="socketio-connections">Socket.IO Connections</h3>
+
+<p>The Socket.IO connection is secured with a shared key.  The communication flow
+for a non-web client (worker/server):</p>
+
+<ol>
+  <li>A JWT is created from the secret key.  The secret key is communicated through
+a separate secure channel.  In most cases, it will be through the command
+line arguments of the client.  The JWT has a limited lifetime and a scope.</li>
+  <li>The client registers with the web server, with an Authentication bearer token
+in the headers.  The registration includes details about the client.  It
+returns a special (secret) <code class="language-plaintext highlighter-rouge">client_id</code> that will be used to authenticate the
+Socket.IO connection.  The registration is valid for 30
+seconds before the <code class="language-plaintext highlighter-rouge">client_id</code> is no longer valid.</li>
+  <li>The client creates a Socket.IO connection with the <code class="language-plaintext highlighter-rouge">client_id</code> in the request
+arguments.</li>
+</ol>
+
+<h3 id="web-interface">Web Interface</h3>
+
+<p>The web interface is secured with an OAuth login from GitHub.  There is a whitelist
+of allowed GitHub users that can access the interface.</p>
+
+<p>The flow for web clients connecting with Socket.IO is much easier since they are already authenticated
+with OAuth from GitHub.</p>
+
+<ol>
+  <li>The user authenticates with GitHub</li>
+  <li>The Socket.IO connection includes cookies such as the session, which is a
+signed by a secret key on the server.  The session’s github key is compared to the
+whitelist of allowed users.</li>
+</ol>
+
+<h2 id="storage-of-tests-and-results">Storage of tests and results</h2>
+
+<p>Storage of the tests and results are still being designed.  Most likely, the
+tests and results will be stored in a database such as Postgres.</p>
+
+<h1 id="conclusions">Conclusions</h1>
+
+<p><a href="https://heroku.com">Heroku</a> provides a great playing ground to prototype these
+web applications. I hope that I can find an alternative eventually that will run on
+OSG’s production kubernetes installation.</p>
+
+<p>The web application is still be developed, and there is much to be done before
+it can be fully utilized for the scale validation.  But, many of the difficult
+components are completed, including the communcation and eventing, secure web
+interface, and clients.</p>
+
+<p>The GitHub repos are available at:</p>
+
+<ul>
+  <li><a href="https://github.com/djw8605/xrootd-client-manager">XRootD Client Manager</a></li>
+  <li><a href="https://github.com/djw8605/xrootd-ws-client">XRootD Client</a></li>
+</ul>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2020/extending-the-spectrum-lsf-gui-to-display-job-gpu-metrics/">< Extending the Spectrum LSF GUI to display job GPU metrics</a>
+	 
+	<a class="next" href="/personal-blog/2020/things-i-learned-from-looking-at-500-research-computing-manager-jobs-over-10-months/">Things I Learned from Looking at 500 Research Computing Manager Jobs over 10 Months ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
