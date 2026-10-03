@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>MPI's Place in Big Computing - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2016-10-14T01:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2016/mpi-s-place-in-big-computing/"/>
+        <meta property="og:title" content="MPI's Place in Big Computing - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="MPI's Place in Big Computing - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">14.10.2016  &middot; <span class="reading-time" title="Estimated read time">
+  
+   4 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/mpi-s-place-in-big-computing&amp;text=MPI's Place in Big Computing - https://hpc.social/mpi-s-place-in-big-computing" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/mpis-place-in-big-computing.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>MPI's Place in Big Computing</h1>
+	<p>The organizers of <a href="http://www.eurompi2016.ed.ac.uk">EuroMPI 2016</a> were kind enough to invite me to give a keynote and participate in a panel at their meeting, which was held at the end of September in beautiful Edinburgh.  The event was terrific, with lots of very interesting work going on in MPI implementations and with MPI.</p>
+
+<p>The topic of my talk was “MPI’s Place in Big Computing”; the materials from the talk can be found <a href="http://github.com/ljdursi/EuroMPI2016">on github</a>. The talk, as you might expect, included discussion of high-productivity big data frameworks, but also — and missing from the discussion in my “HPC is dying” blog post — the “data layer” frameworks that underpin them.</p>
+
+<p>I think a lot of people have taken, quite reasonably, my that blog post to suggest that <a href="http://spark.apache.org">Spark</a> for example is a competitor to MPI; the point I wanted to make is a little more nuanced that that.</p>
+
+<p>I’m actually skeptical of Spark’s utility for (<em>e.g.</em>) large-scale simulations. However attractive the model is from a variety of points of view, absent some huge breakthrough I don’t think that functional models with immutable data can support the performance, memory requirements, or performance predictability we require.  (But who knows; maybe that’ll be one of the compromises we find we have to make on the road to exascale).</p>
+
+<p>But whatever you might think of Spark’s efficacy for your particular use case,</p>
+
+<ul>
+  <li>A lot of people manifestly find it to be extremely useful for <em>their</em> use case; and</li>
+  <li>Performance is quite important to those communities.</li>
+</ul>
+
+<p>So given that, why isn’t Spark built atop of MPI for network communications?  And why isn’t <a href="http://tensorflow.org">TensorFlow</a>, or <a href="http://dask.pydata.org">Dask</a>, or <a href="http://www.seastar-project.org">SeaStar</a>?</p>
+
+<p>The past five years have seen a huge number of high-productivity tools for large-scale number crunching gain extremely rapid adoption.  Even if you don’t like those particular tools for your problems, surely you’d like for there to exist some tools like that for the traditional HPC community; why do other communications frameworks support this flourishing ecosystem of platforms, and MPI doesn’t?</p>
+
+<p>There’s another argument there, too - simply from a self-preservation point of view, it would be in MPI’s interest to be adopted by a high-profile big data platform to ensure continued success and support.  But none are; why?  It’s not because the developers of Spark or at Google are just too dumb to figure out MPI’s syntax.</p>
+
+<p>Going through what does get used for these packages and what doesn’t — which is what I do in this talk — I think the issues become fairly clear.  MPI wants to be both a low-level communications framework and a higher-level programming model, and ends up tripping over it’s own feet trying to dance both dances.  As a communications “data plane” it imposes too many high-level decisions on applications — no fault tolerance, restrictive communications semantics (in-order and arrival guarantees), and provides too few services (<em>e.g.</em> a performant active message/RPC layer).  And as a high-level programming model it is too low level and is missing different services (communications-aware scheduling came up in several guises at the meeting).</p>
+
+<p>I don’t think that’s insurmountable; I think inside MPI implementations there is a performant, network-agnostic low-level communications layer trying to get out.  Exposing more MPI runtime services is a move in the right direction.  I was surprised at how open the meeting participants were to making judicious changes — even perhaps breaking some backwards compatability — in the right directions.</p>
+
+<p>Thanks again to the organizers for extending the opportunity to participate; it was great.</p>
+
+<p>My slides can be seen below or on <a href="http://ljdursi.github.io/EuroMPI2016/#1">github</a>, where <a href="http://github.com/ljdursi/EuroMPI2016">the complete materials can be found</a>.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2016/jupyter-notebooks-for-performing-and-sharing-bioinformatics-analyses/">< Jupyter Notebooks for Performing and Sharing Bioinformatics Analyses</a>
+	 
+	<a class="next" href="/personal-blog/2016/sc16-stir-it-up/">SC16- Stir it up! ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
