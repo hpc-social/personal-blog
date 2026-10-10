@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>An unstructured rant on running long-lived software services - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2022-03-12T16:00:00-07:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2022/an-unstructured-rant-on-running-long-lived-software-services/"/>
+        <meta property="og:title" content="An unstructured rant on running long-lived software services - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="An unstructured rant on running long-lived software services - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">12.03.2022  &middot; <span class="reading-time" title="Estimated read time">
+  
+   5 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/an-unstructured-rant-on-running-long-lived-software-services&amp;text=An unstructured rant on running long-lived software services - https://hpc.social/an-unstructured-rant-on-running-long-lived-software-services" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://thinking.ajdecon.org">Computing – thinking out loud</a>&nbsp;works in progress and scattered thoughts, often about computers.&nbsp;See the original post&nbsp;<a target="_blank" href="https://thinking.ajdecon.org/2022/03/12/an-unstructured-rant-on-running-long-lived-software-services/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>An unstructured rant on running long-lived software services</h1>
+	<p>&#8211; Be kind to your colleagues. Be kind to your users. Be kind to yourself. This is a long haul and you’ll all fuck up.</p>
+
+<p>⁃ The natural environment for your code is production. It will run there longer than it does anywhere else. Design for prod first, and if possible, make your dev environment act like prod.</p>
+
+<p>⁃ Legacy code is the only code worth caring about.</p>
+
+<p>⁃ Users do weird stuff, but they usually have a very good reason, at least in their context. Learn from them.</p>
+
+<p>⁃ It’s 2022, <em>please</em> do structured logging.</p>
+
+<p>⁃ Contexts and tracing make everyone&#8217;s lives easier when it comes time to debug. At minimum, include a unique request id with every request and plumb it through the system.</p>
+
+<p>⁃ Do your logging in a separate thread. It sucks to find a daemon blocked and hanging because of a full disk or a down syslog server.</p>
+
+<p>⁃ Don’t page for individual machines going down. Do provide an easy or automated way for bad nodes to get thrown out of the system.</p>
+
+<p>&#8211; Be prepared for your automation to be the problem, and include circuit breakers or kill switches to stop it. I&#8217;ve seen health checks that started flagging every machine in the fleet as bad, whether it was healthy or not. We didn&#8217;t bring down prod because the code assumed if it flagged more than 15% of the fleet as bad, the problem was probably with the test, not the service.</p>
+
+<p>⁃ Make sure you have a way to know who your users are. If you allow anonymous access, you&#8217;ll discover in five years that a business-critical team you&#8217;ve never heard of is relying on you.</p>
+
+<p>⁃ Make sure you have a way to turn off access for an individual machine, user, etc. If your system does anything more expensive than sending network requests, it will be possible for a single bad client to overwhelm a distributed system with thousands of servers. Turning off their access is easier than begging them to stop.</p>
+
+<p>⁃ If you don’t implement QOS early on, it will be hellish to add it later, and you will certainly need it if your system lasts long enough.</p>
+
+<p>⁃ If you provide a client library, and your system is internal only, have it send logs to the same system as your servers. This will help trace issues back to misbehaving clients so much.</p>
+
+<p>⁃ Track the build time for every deployed server binary and monitor how old they are. If your CI process deploys daily, week-old binaries are a problem. Month-old binaries are a major incident.</p>
+
+<p>⁃ If you can get away with it (internal services): track the age of client library builds and either refuse to support builds older than X, or just cut them off entirely. It sucks to support requests from year-old clients, force them to upgrade!</p>
+
+<p>⁃ Despite all this, you will at some point start getting requests from an ancient software version, or otherwise malformed. Make sure these requests don’t break anything.</p>
+
+<p>⁃ Backups are a pain, and the tooling is often bad, but I swear they will save you one day. Take the time to invest in them.</p>
+
+<p>⁃ Your CI process should exercise your turnup process, your decommission process, and your backups workflow. Life will suck later if you discover one of these is broken.</p>
+
+<p>⁃ Third party services go down. Your service goes down too, but they probably won’t happen at the same time. Be prepared to either operate without them, or mirror them yourself</p>
+
+<p>⁃ Your users will never, ever care if you’re down because of a dependency. Every datacenter owned by AWS could be hit by a meteor at the same time, but <em>your</em> user will only ever ask “why doesn’t my service work?”</p>
+
+<p>⁃ Have good human relationships with your software dependencies. Know the people who develop them, keep in touch with them, make sure you understand each other. This is especially true internally but also important with external deps. In the end, software is made of people.</p>
+
+<p>⁃ If users don’t have personal buy-in to the security policy, they <em>will</em> find ways to work around them and complain about you for making their lives harder. Take the time to educate them, or you&#8217;ll be fighting them continuously.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2022/what-i-ve-learned-from-looking-at-1-500-jobs-leading-research-computing-teams/">< What I've Learned from Looking at 1,500 Jobs Leading Research Computing Teams</a>
+	 
+	<a class="next" href="/personal-blog/2022/relivin-the-90-s-amiga-style/">Relivin' the 90's - Amiga style ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
