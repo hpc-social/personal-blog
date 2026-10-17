@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>IBM Platform Cluster Manager - how do you like your eggs? - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2015-06-07T03:42:03-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2015/ibm-platform-cluster-manager-how-do-you-like-your-eggs/"/>
+        <meta property="og:title" content="IBM Platform Cluster Manager - how do you like your eggs? - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="IBM Platform Cluster Manager - how do you like your eggs? - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">07.06.2015  &middot; <span class="reading-time" title="Estimated read time">
+  
+   2 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/ibm-platform-cluster-manager-how-do-you-like-your-eggs-&amp;text=IBM Platform Cluster Manager - how do you like your eggs? - https://hpc.social/ibm-platform-cluster-manager-how-do-you-like-your-eggs-" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/clustermanager_eggs/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>IBM Platform Cluster Manager - how do you like your eggs?</h1>
+	<p>Whether your HPC center is in Lilliput or Blefuscu, you&rsquo;ll appreciate the
+importance of a flexible and easy-to-use cluster management solution to empower your populations. Administrators need software that will allow them to easily
+setup, manage, monitor and maintain their infrastructure and ensure consistency for repeatable performance. With the varied workloads we see in modern HPC
+centers, ranging from traditional HPC to Big Data and Analytics, organizations
+may also consider building out heterogeneous environments, where different
+hardware types are used for different workloads. As the OpenPOWER Foundation
+grows, it stresses the overall importance of workflows across the HPC Data
+Life Cycle - it&rsquo;s clear that when it comes to solutions for technical computing, it&rsquo;s no longer a one horse race.</p>
+
+<p>IBM Platform Cluster Manager is powerful, easy-to-use infrastructure management for today’s scale out computing needs. The latest release of Platform Cluster
+Manager V4.2.1 now provides the ability to manage mixed computing environments -
+so whether you&rsquo;re running Linux on POWER Big-Endian or Little-Endian, the choice is yours. In fact, you can even deploy and seamlessly manage a mixed
+infrastructure taking advantage of the latest IBM POWER8 and x86 systems.</p>
+
+<p>Leveraging <a href="http://xcat.org/">xCAT</a> technology, Platform Cluster Manager can manage clusters ranging from &lsquo;Lilliputian&rsquo; in size all the way up to 2500 nodes. Platform Cluster
+Manager Advanced Edition supports the automated creation of multiple clusters
+on a shared infrastructure - allowing you to easily satisfy the business
+requirements of Lilliputians and Blufescans.  For organizations with a single
+HPC cluster, Platform Cluster Manager Standard Edition provides the ability to
+quickly provision, run, manage and monitor a technical computing infrastructure with unprecedented ease.</p>
+
+<p>For users taking advantage of IBM POWER8 systems, Platform Cluster Manager can
+now provision PowerNV nodes as well as PowerKVM hypervisors, which provides
+greater flexibility in infrastructure management and optimization. Further
+enhancements in this release geared towards administrator productivity include
+IBM POWER8 energy, PowerKVM and enhanced switch monitoring</p>
+
+<p>So go ahead. With Platform Cluster Manager you can crack your eggs any way you
+like.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2015/ibm-platform-lsf-and-docker-a-whale-of-a-time/">< IBM Platform LSF and Docker- A Whale of a time!</a>
+	 
+	<a class="next" href="/personal-blog/2015/looking-back-at-isc-high-performance-2015/">Looking back at ISC High-Performance 2015 ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
