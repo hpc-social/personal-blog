@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>GRACC Transition Visualization - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2020-03-08T06:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2020/gracc-transition-visualization/"/>
+        <meta property="og:title" content="GRACC Transition Visualization - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="GRACC Transition Visualization - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">08.03.2020  &middot; <span class="reading-time" title="Estimated read time">
+  
+   4 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/gracc-transition-visualization&amp;text=GRACC Transition Visualization - https://hpc.social/gracc-transition-visualization" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://derekweitzel.com/">Dereks Web</a>&nbsp;Thoughts from Derek.&nbsp;See the original post&nbsp;<a target="_blank" href="https://derekweitzel.com/2020/03/08/gracc-transition/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>GRACC Transition Visualization</h1>
+	<p>The OSG is in the progress of transitioning from an older ElasticSearch (ES) cluster to a new version.  Part of this process is reindexing (copying) data from the old to the new.  Unfortunately, it’s not easy to capture a status of this transition.  For this, I have created the <a href="https://gracc-transition.herokuapp.com/">GRACC Transition page</a>.</p>
+
+<p>The goal is to transition when both the old and new ES have the same data.  A simple measure of this is if they share the same number of documents in all of the indexes.</p>
+
+<p>Source for this app is available on github: <a href="https://github.com/djw8605/gracc-transition">GRACC Transition</a></p>
+
+<h2 id="data-collection">Data Collection</h2>
+
+<p>Data collection is performed by a probe on each the new and old ElasticSearch clusters.  Upload is performed with a POST to the gracc transition website.  Authorization is performed with a shared random token between the probe and the website.</p>
+
+<p>The probe is very simple.  It queries ES for all indexes, as well as the number of documents and data size inside the index.</p>
+
+<p>There are also many indexes that the OSG is not transitioning to the new ES.  In order to ignore these indexes, a set of regular expressions is used to remove the indexes from consideration.  Those regular expressions are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/^osg.*/,           // Start with osg.*
+/^ps_.*/,           // Start with ps_*
+/^shrink\-ps_.*/,   // Start with shrink-ps_*
+/^glidein.*/,       // Start with glidein*
+/^\..*/,            // Start with .
+/^ps\-itb.*/        // Start with ps-itb*
+</code></pre></div>
+</div>
+
+<h2 id="the-website">The Website</h2>
+
+<p><img alt="GRACC Transition Website" src="https://derekweitzel.com/images/posts/gracc-transition/gracc-transition-website.png" /></p>
+
+<p>The gracc transition app is hosted on the <a href="https://www.heroku.com/">Heroku</a>.  I choose Heroku because it provides a simple hosting platform with a database for free.</p>
+
+<p>The website pushes alot of the data processing to the client.  The data is stored in the database as JSON and is sent to the client without any transformation.  The client pulls the data from the website for both the new and old ES and begins to process the data within javascript.</p>
+
+<p>The website breaks the statistics into three visualizations:</p>
+
+<ol>
+  <li><strong>Progress Bars</strong>: Comparing the total documents and total data size of the old and new.  The progress is defined as new / old.  The bars provide a very good visualization of the progress of the transition as they need to reach 100% before we are able to fully transition.</li>
+  <li><strong>Summary Statistics</strong>: The summary statistics show the raw number of either missing or mismatched indexes.  If an index is in the old ES but is not in the new ES, it is counted as <strong>missing</strong>.  If the index is a different size in the old vs. the new, it is counted as <strong>mismatched</strong>.</li>
+  <li><strong>Table of Indices</strong>: Finally, a table of indices is shown with the number of documents that are missing, or simply <strong>Missing</strong> if the index is missing in the new ES.</li>
+</ol>
+
+<p>In addition to the table, I also provide a button to download the list of indexes that are missing or mismatched.  This can be useful for an administrator to make sure it matches what they expect or to process with elasticsearch.</p>
+
+<h2 id="improvements-and-future">Improvements and Future</h2>
+
+<p>In the future, I would like to generate a weekly or even daily email to show the progress of the transition.  This would give provide a constant reminder of the state of the transition.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2020/bootup-fun-dual-socket-power9/">< Bootup fun- dual-socket POWER9</a>
+	 
+	<a class="next" href="/personal-blog/2020/how-to-quickly-start-one-on-ones-with-your-research-computing-team-a-one-week-plan-of-action/">How To Quickly Start One-on-Ones with your Research Computing Team- A One-Week Plan of Action ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
