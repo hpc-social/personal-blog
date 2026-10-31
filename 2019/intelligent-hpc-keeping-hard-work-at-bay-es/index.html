@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Intelligent HPC - Keeping Hard Work at Bay(es) - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2019-12-19T02:21:37-07:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2019/intelligent-hpc-keeping-hard-work-at-bay-es/"/>
+        <meta property="og:title" content="Intelligent HPC - Keeping Hard Work at Bay(es) - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Intelligent HPC - Keeping Hard Work at Bay(es) - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">19.12.2019  &middot; <span class="reading-time" title="Estimated read time">
+  
+   4 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/intelligent-hpc-keeping-hard-work-at-bay-es-&amp;text=Intelligent HPC - Keeping Hard Work at Bay(es) - https://hpc.social/intelligent-hpc-keeping-hard-work-at-bay-es-" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/intelligent_hpc/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Intelligent HPC - Keeping Hard Work at Bay(es)</h1>
+	<p>Since the dawn of time, humans have looked for ways to make their lives easier. Over the centuries human ingenuity has given us inventions such as the wheel and simple machines – which help greatly with tasks that would otherwise be extremely laborious. Over the time, we’ve learned there are often alternatives to brute force ways of doing things. It’s this human reasoning that has driven the advancement we find in our world today.</p>
+
+<p>Fast forward to this century where computer driven simulations have been developed as the third branch of scientific method supplementing theory and experimentation. For decades, simulation and modelling have delivered unprecedented capabilities to drive innovation for the betterment of the world. The need to run more simulations faster, has spurred the development of ever faster processors, networking and storage. The approach to speeding up simulations has been one of brute force. Faster computing to deliver faster results. But the insatiable desire to perform simulations faster has very real implications in today’s world – such as managing the power requirements of future supercomputers. It’s time in high performance computing to revisit the brute force approaches to achieve the next level of performance.</p>
+
+<p><strong>Lessons from the past</strong></p>
+
+<p>We sometimes forget that it’s important to look at lessons from the past, in order to create a better future. HPC simulations today are computationally intensive – and as the fidelity of models increases, so does the number of calculations and time to solution. Rethinking this laborious method for simulations, are there ways that we can cut down on the number of calculations performed? A calculation avoided, is time saved. Our lesson takes us back to 1763 when Thomas Bayes authored <em>“An Essay towards solving a Problem in the Doctrine of Changes”</em>, from which Bayes’ Theorem was developed.</p>
+
+<p>In simple terms, Bayes’ theorem can be used to predict the probability of an outcome, based upon prior knowledge or information. What if Bayes’ theorem could be applied to computational simulations to determine the likelihood of a given iteration of a simulation to provide a useful outcome, and to discard those iterations where there is not likely a useful outcome? A calculation avoided, is time saved. As it turns out, applying Bayesian methods to HPC design can dramatically reduce the time to optimal product specification.</p>
+
+<p><strong>Bayesian optimization at work</strong></p>
+
+<p>To put Bayesian methods to the test, the engineers of the IBM Systems High Speed Bus Signal Integrity (HSB-SI) Team used software based upon the principles of Bayesian statistics called IBM Bayesian Optimization (IBO) developed by IBM Research. IBO was designed to accelerate computational workflows through the application of sophisticated algorithms. The HSB-SI team’s challenge is to minimize the time needed design validation simulation analysis of high-speed interfaces for the purpose of choosing an optimal configuration point, while maintaining or increasing the fidelity of the solution. In testing IBO, they wanted to reduce the number of simulations needed to reach the optimal configuration point for chip-to-chip communication.</p>
+
+<blockquote>
+<p><em>“Our team is taking advantage of state-of-the-art machine learning to design computer systems of the future.”</em>
+<strong>Dale Becker, Ph.D., Chief Engineer Electrical Packaging Integration, IBM</strong></p>
+
+</blockquote>
+<p><a href="https://tci.taborcommunications.com/l/21812/2019-12-18/6kxfd4">The results were dramatic</a>. They achieved a 140x faster time to solution with higher accuracy than their legacy method. They used 99% less cores to arrive at a higher confidence solution with less than a 1% error rate using IBO.</p>
+
+<p>With time to solution being a critical element of competitive advantage, the adoption of sophisticated statistical methods and machine learning to accelerate simulation workflows is destined to grow quickly. In our next article about innovations in HPC we will highlight multiple use cases where Bayesian optimized workflows are transforming HPC simulation-driven innovation.</p>
+
+<p><strong>Originally published on HPCwire IBM Solution Channel on December 18, 2019</strong></p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2019/sc-19-recap/">< SC'19 Recap</a>
+	 
+	<a class="next" href="/personal-blog/2020/numa-on-nine-with-spectrum-lsf/">NUMA on NINE with Spectrum LSF ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

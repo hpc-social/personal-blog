@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Armed and ready with IBM Platform LSF - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2014-04-11T16:39:53-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2014/armed-and-ready-with-ibm-platform-lsf/"/>
+        <meta property="og:title" content="Armed and ready with IBM Platform LSF - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Armed and ready with IBM Platform LSF - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">11.04.2014  &middot; <span class="reading-time" title="Estimated read time">
+  
+   7 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/armed-and-ready-with-ibm-platform-lsf&amp;text=Armed and ready with IBM Platform LSF - https://hpc.social/armed-and-ready-with-ibm-platform-lsf" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/armed_ready_lsf/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Armed and ready with IBM Platform LSF</h1>
+	<p>These days it&rsquo;s not uncommon to hear about CPUs based upon ARM cores. They can
+be found in mobile phones, embedded systems, laptops and even servers. Indeed,
+recently there have been a number of major announcements from vendors building
+processors based ARM cores. This includes the AMD Opteron A1100, NVIDIA Tegra
+K1 and even the Apple A7, which is used the iPhone 5s. What these all have in
+common is that they are 64-bit and based on the ARM v8 ISA. At the same time,
+the ARM-server chip startup Calxeda announced it was shutting down. Surging
+power requirements, as well as the announcement of 64-bit chips have led to
+renewed interest in energy efficient ARM based processors for high performance
+computing.</p>
+
+<p>When building out an infrastructure for Technical Computing, a workload manager
+is typically used to control access to the computing resources. As it turns out,the leading workload manager IBM Platfom LSF (formerly Platform Computing) has
+supported Linux on ARM for about 10 years. In fact, today there are IBM
+clients using Platform LSF on Linux ARM-based clusters as part of mobile
+device design and testing.</p>
+
+<p>The current release of IBM Platform LSF 9.1.2 supports Linux on ARM v7 with
+upcoming support for ARM v8. Given that Platform LSF provides the ability to
+build out heterogeneous clusters, creating a compute cluster containing ARM,
+Power and x86 based nodes is a snap. Jobs may be targetted to a specific
+processor type and the optional portal IBM Platform Application Centre
+provides an easy to use, highly configurable, application-centric web based
+interface for job management.</p>
+
+<p><strong>Hello. How do you &ldquo;doo&rdquo;?</strong></p>
+
+<p>I&rsquo;ve recently had the opportunity to test IBM Platform LSF on two node, ARM
+based cluster . The IBM Platform LSF master node was a Udoo Quad system running Debian Wheezy ARMv7 EABI hard-float. The second node was running Fedora on a
+ARM v8 simulator. Installation and operation of the software was identical to
+other platforms. Using the Platform LSF ELIM (External LIM) facility for
+adding external load indices, I was able to quickly create a script to load
+the processor temperature on the Udoo Quad system.</p>
+
+<p>Now, putting Platform LSF through it&rsquo;s paces, we see the type and model and
+other physical characteristics of the nodes are detected.</p>
+
+<div class="highlight"><pre><code class="language-bash">$ lshosts -w
+HOST_NAME type model cpuf ncpus maxmem maxswp server RESOURCES
+udoo LINUX_ARM ARM7l 60.0 <span style="color: #ae81ff;">4</span> 875M - Yes <span style="color: #f92672;">(</span>mg<span style="color: #f92672;">)</span>
+ma1arms4 LINUX_ARM   ARM8  60.0     <span style="color: #ae81ff;">1</span>   1.8G   1.9G    Yes <span style="color: #f92672;">()</span></code></pre></div>
+
+<p>Looking at the load information on the system, we see the built-in load
+indices, in addition to the cputemp metric which I introduced to report the
+CPU temperature (Celsius). At this point the system is essentially idle.</p>
+
+<div class="highlight"><pre><code class="language-bash">$ lsload -l
+HOST_NAME status r15s r1m r15m ut pg io ls it tmp swp mem cputemp
+udoo ok 0.5 0.6 1.5 4% 0.0 <span style="color: #ae81ff;">311</span> <span style="color: #ae81ff;">1</span> <span style="color: #ae81ff;">0</span> 1297M 0M 701M 45.0
+ma1arms4   busy   3.6  *7.7   6.2  52%   0.0   <span style="color: #ae81ff;">50</span> <span style="color: #ae81ff;">3</span>   <span style="color: #ae81ff;">0</span>  954M  1.9G  1.6G 0.0</code></pre></div>
+
+<p>Next, we submit a job for execution to Platform LSF. Rather than the requisite
+sleep job, we submit something a bit more interesting, the HPC Challenge
+Benchmark (HPCC). Debian Wheezy happens to include a pre-compiled binary which
+is compiled against OpenMPI.</p>
+
+<p>As the Udoo Quad is a 4 core system (as the name implies), hpcc is submitted
+requesting 4 cores.</p>
+
+<div class="highlight"><pre><code class="language-bash">$ bsub -n <span style="color: #ae81ff;">4</span> mpiexec -n <span style="color: #ae81ff;">4</span> /usr/bin/hpcc
+Job &lt;2&gt; is submitted to default queue &lt;normal&gt;.</code></pre></div>
+
+<p>With HPCC running, we quickly see the utilization as well as the CPU
+temperature increase to 60C.</p>
+
+<div class="highlight"><pre><code class="language-bash">$ lsload -l
+HOST_NAME status r15s r1m r15m ut pg io ls it tmp swp mem cputemp
+udoo ok 5.1 5.1 2.4 94% 0.0 <span style="color: #ae81ff;">49</span> <span style="color: #ae81ff;">1</span> <span style="color: #ae81ff;">0</span> 1376M 0M 497M 60.0
+ma1arms4   ok   0.5  1.1   1.2  40%   0.0   <span style="color: #ae81ff;">50</span> <span style="color: #ae81ff;">3</span>   <span style="color: #ae81ff;">0</span>  954M  1.9G  1.6G 0.0</code></pre></div>
+
+<p>During the life of the job, the resource utilization may be easily viewed using the Platform LSF user commands. This includes details such as the PIDs which
+the job is comprised of.</p>
+
+<div class="highlight"><pre><code class="language-bash">$ bjobs -l
+ 
+Job &lt;2&gt;, User &lt;debian&gt;, Project &lt;default&gt;, Status &lt;RUN&gt;, Queue &lt;normal&gt;, 
+                    Command &lt;mpiexec -n <span style="color: #ae81ff;">4</span> /usr/bin/hpcc&gt;, Share group charged &lt;/debian&gt;
+Sun Feb <span style="color: #ae81ff;">2</span> 23:49:48: Submitted from host &lt;udoo&gt;, CWD &lt;/opt/ibm/lsf/conf&gt;, 
+                    <span style="color: #ae81ff;">4</span> Processors Requested;
+Sun Feb <span style="color: #ae81ff;">2</span> 23:49:48: Started on <span style="color: #ae81ff;">4</span> Hosts/Processors &lt;udoo&gt; &lt;udoo&gt; &lt;udoo&gt; &lt;udoo&gt;,
+Execution Home &lt;/home/debian&gt;, Execution CWD &lt;/opt/ibm/lsf/conf&gt;;
+Sun Feb <span style="color: #ae81ff;">2</span> 23:51:05: Resource usage collected.
+The CPU time used is <span style="color: #ae81ff;">227</span> seconds.
+MEM: <span style="color: #ae81ff;">140</span> Mbytes; SWAP: <span style="color: #ae81ff;">455</span> Mbytes; NTHREAD: <span style="color: #ae81ff;">8</span>
+PGID: 15678; PIDs: <span style="color: #ae81ff;">15678</span> <span style="color: #ae81ff;">15679</span> <span style="color: #ae81ff;">15681</span> <span style="color: #ae81ff;">15682</span> <span style="color: #ae81ff;">15683</span> <span style="color: #ae81ff;">15684</span>
+<span style="color: #ae81ff;">15685</span>
+....
+....</code></pre></div>
+
+<p><strong>New Roads?</strong></p>
+
+<p>Here we could speak of GFlops, and other such measures of performance, but
+that was not my objective. The key, is that there is a growing interest in
+non-x86 solutions for Technical Computing. IBM Platform LSF software has
+supported and continues to support a wide variety of operating systems and
+processor architectures, from ARM to IBM Power to IBM System z.</p>
+
+<p>As for ARM based development boards such as the Udoo Quad, Parallela Board,
+etc., they are inexpensive as well as being energy efficient. This fact makes
+them of interest to HPC scientists looking at possible approaches to energy
+efficiency for HPC workloads. Let us know your thoughts about the suitability
+of ARM for HPC workloads.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2014/udoo-quad-test-drive/">< Udoo Quad test drive</a>
+	 
+	<a class="next" href="/personal-blog/2014/parallelizing-r-on-supercomputers/">Parallelizing R on Supercomputers ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

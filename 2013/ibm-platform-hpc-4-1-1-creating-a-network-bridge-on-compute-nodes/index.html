@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>IBM Platform HPC 4.1.1- Creating a network bridge on compute nodes - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2013-10-09T19:12:15-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2013/ibm-platform-hpc-4-1-1-creating-a-network-bridge-on-compute-nodes/"/>
+        <meta property="og:title" content="IBM Platform HPC 4.1.1- Creating a network bridge on compute nodes - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="IBM Platform HPC 4.1.1- Creating a network bridge on compute nodes - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">09.10.2013  &middot; <span class="reading-time" title="Estimated read time">
+  
+   5 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/ibm-platform-hpc-4-1-1-creating-a-network-bridge-on-compute-nodes&amp;text=IBM Platform HPC 4.1.1- Creating a network bridge on compute nodes - https://hpc.social/ibm-platform-hpc-4-1-1-creating-a-network-bridge-on-compute-nodes" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/hpc411_bridge/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>IBM Platform HPC 4.1.1- Creating a network bridge on compute nodes</h1>
+	<p><strong>Applies to</strong></p>
+
+<ul>
+<li>IBM Platform HPC V4.1.1</li>
+<li>IBM Platform Cluster Manager V4.1.1</li>
+</ul>
+<p><strong>Introduction</strong></p>
+
+<p>IBM Platform HPC provides the ability to customise the network configuration
+of compute nodes via Network Profiles. Network Profiles support a custom NIC
+script for each defined interface.</p>
+
+<p>This provides the ability to configure network bonding and bridging. Here we
+provide a detailed example on how to configure a network bridge in a cluster
+managed by IBM Platform HPC.</p>
+
+<p>IBM Platform HPC includes xCAT technology for cluster provisioning. xCAT
+includes a script (<em>/install/postscripts/xHRM</em>) which may be used  to
+configure network bridging. This script is leveraged as a custom network
+script in the example below.</p>
+
+<p><strong>Example</strong></p>
+
+<p>The configuration of the network provision may be viewed in the IBM Platform HPC Web console at: <em>Resources &gt; Node Provisioning &gt; Networks</em>.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/provision_net_wiki.png" />
+</figure>
+
+<p>The configuration of network provision may also be viewed using the <em>lsdef</em> CLI.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># lsdef -t network provision</span>
+Object name: provision
+    domain<span style="color: #f92672;">=</span>private.dns.zone
+    dynamicrange<span style="color: #f92672;">=</span>192.0.2.201-192.0.2.254
+    gateway<span style="color: #f92672;">=</span>&lt;xcatmaster&gt;
+    mask<span style="color: #f92672;">=</span>255.255.255.0
+    mgtifname<span style="color: #f92672;">=</span>eth0
+    net<span style="color: #f92672;">=</span>192.0.2.0
+    staticrange<span style="color: #f92672;">=</span>192.0.2.15-192.0.2.49
+    staticrangeincrement<span style="color: #f92672;">=</span><span style="color: #ae81ff;">1</span>
+    tftpserver<span style="color: #f92672;">=</span>192.0.2.50</code></pre></div>
+
+<p>The Network Profile <em>default_network_profile</em> which includes the network
+provision may be viewed in the IBM Platform HPC Web console at: <em>Resources &gt;
+Node Provisioning &gt; Provisioning Templates &gt; Network Profiles</em>.</p>
+
+<p></p>
+
+<p>The Network Profile <em>default_network_profile</em> configuration may also be viewed
+using the <em>lsdef</em> CLI.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># lsdef -t group __NetworkProfile_default_network_profile</span>
+Object name: __NetworkProfile_default_network_profile
+    grouptype<span style="color: #f92672;">=</span>static
+    installnic<span style="color: #f92672;">=</span>eth0
+    members<span style="color: #f92672;">=</span>
+    netboot<span style="color: #f92672;">=</span>xnba
+    nichostnamesuffixes.eth0<span style="color: #f92672;">=</span>-eth0
+    nichostnamesuffixes.bmc<span style="color: #f92672;">=</span>-bmc
+    nicnetworks.eth0<span style="color: #f92672;">=</span>provision
+    nicnetworks.bmc<span style="color: #f92672;">=</span>provision
+    nictypes.eth0<span style="color: #f92672;">=</span>Ethernet
+    nictypes.bmc<span style="color: #f92672;">=</span>BMC
+    primarynic<span style="color: #f92672;">=</span>eth0</code></pre></div>
+
+<p>Here, we configure a network bridge <em>br0</em> against <em>eth0</em> for compute nodes
+using a new Network Profile.</p>
+
+<ol>
+<li>Add a new Network Profile with name <em>default_network_profile_bridge</em> via
+the IBM Platform HPC Web console. As an Administrator user, browse to <em>Resources &gt; Node Provisioning &gt; Provisioning Templates &gt; Network Profiles</em> and select
+the button <em>Add</em>.</li>
+</ol>
+<figure><img src="https://www.gaborsamu.com/images/new_profile_wiki.png" />
+</figure>
+
+<p>A total of three devices are required to be added:</p>
+
+<ul>
+<li>
+<p>eth0</p>
+
+</li>
+<li>
+<p>Type: Ethernet</p>
+
+</li>
+<li>
+<p>Network: provision</p>
+
+</li>
+<li>
+<p>bmc</p>
+
+</li>
+<li>
+<p>Type: BMC</p>
+
+</li>
+<li>
+<p>Network: provision</p>
+
+</li>
+<li>
+<p>br0</p>
+
+</li>
+<li>
+<p>Type: Customized</p>
+
+</li>
+<li>
+<p>Network: provision</p>
+
+</li>
+<li>
+<p>Configuration Command: xHRM bridgeprereq eth0:br0 (creates network bridge
+br0 against eth0)</p>
+
+</li>
+</ul>
+<p>The new Network Profile <em>default_network_profile_bridge</em> is shown below.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/new_profile5_wiki.png" />
+</figure>
+
+<ol start="2">
+<li>Now we are ready to provision the nodes using the new Network Profile
+<em>default_network_profile_bridge</em>. To begin the process to add nodes, navigate
+in the the IBM Platform HPC Web console to <em>Resources &gt; Devices &gt; Nodes</em> and
+select the button <em>Add</em>. Within the Add Nodes window, select optionally
+Node Group <em>compute</em> and Select Specify Properties for the provisioning
+template. This will allow you to select the newly created network profile
+<em>default_network_profile_bridge</em>. Here the hardware profile <em>IPMI</em> and stateful
+provisioning are used.</li>
+</ol>
+<figure><img src="https://www.gaborsamu.com/images/add_nodes_wiki.png" />
+</figure>
+
+<p>Nodes are added using Auto discovery by PXE boot.  Nodes may also be added
+using a node information file.</p>
+
+<p>The nodes are powered on, detected by IBM Platform HPC and provisioned.  In
+this example, two nodes <em>compute000</em>, <em>compute001</em> are detected and
+subsequently provisioned.</p>
+
+<ol start="3">
+<li>Once the nodes have been provisioned and complete their initial boot, they
+appear in the IBM Platform HPC Web console (<em>Resources &gt; Devices &gt; Nodes</em>) with
+Status <em>booted</em> and Workload Agent <em>OK</em>.</li>
+</ol>
+<figure><img src="https://www.gaborsamu.com/images/nodes_wiki.png" />
+</figure>
+
+<p>The network bridge is configured on the nodes as expected.  We may see this
+via the IBM Platform HPC Web console by browsing to <em>Resources &gt; Devices &gt;
+Nodes</em> and selecting the <em>Summary</em> tab and scrolling to <em>Other Key Properties</em>.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/nodes2_wiki.png" />
+</figure>
+
+<p>Finally, using the CLI <em>xdsh</em>, we remotely execute ifconfig on node <em>compute001</em>to check the configuration of interface <em>br0</em>.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># xdsh compute001 ifconfig br0</span>
+compute001: br0       Link encap:Ethernet  HWaddr 00:1E:67:49:CC:E5   
+compute001:           inet addr:192.0.2.20  Bcast:192.0.2.255  Mask:255.255.255.0
+compute001:           inet6 addr: fe80::b03b:7cff:fe61:c1d4/64 Scope:Link
+compute001:           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+compute001:           RX packets:26273 errors:0 dropped:0 overruns:0 frame:0
+compute001:           TX packets:42490 errors:0 dropped:0 overruns:0 carrier:0
+compute001:           collisions:0 txqueuelen:0  
+compute001:           RX bytes:11947435 <span style="color: #f92672;">(</span>11.3 MiB<span style="color: #f92672;">)</span>  TX bytes:7827365 <span style="color: #f92672;">(</span>7.4 MiB<span style="color: #f92672;">)</span>
+compute001:</code></pre></div>
+
+<p>As expected, the compute nodes have been provisioned with a network bridge
+<em>br0</em> configured.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2013/isc-2013-wrapup-ibm-platform-hpc-and-intel-xeon-phi/">< ISC 2013 wrapup- IBM Platform HPC and Intel Xeon Phi</a>
+	 
+	<a class="next" href="/personal-blog/2013/supercomputing-2013-sc13/">Supercomputing 2013 (SC13) ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
