@@ -12,15 +12,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Create conda environment
-      run: conda create --quiet -c conda-forge --name hpc python pip requests
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.x"
 
     - name: Update posts
       run: |
         echo "Looking for new posts..."
-        export PATH="/usr/share/miniconda/bin:$PATH"
-        conda run -n hpc python -m pip install -r .github/requirements.txt
-        conda run -n hpc python scripts/generate_posts.py ./_data/authors.yml --output ./_posts/
+        python -m pip install -r .github/requirements.txt
+        python scripts/generate_posts.py ./_data/authors.yml --output ./_posts/
 
     - uses: ruby/setup-ruby@v1
       with:
