@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Buckle up, CPUs are going to get weirder - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2020-11-22T00:00:00-07:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2020/buckle-up-cpus-are-going-to-get-weirder/"/>
+        <meta property="og:title" content="Buckle up, CPUs are going to get weirder - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Buckle up, CPUs are going to get weirder - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">22.11.2020  &middot; <span class="reading-time" title="Estimated read time">
+  
+   8 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/buckle-up-cpus-are-going-to-get-weirder&amp;text=Buckle up, CPUs are going to get weirder - https://hpc.social/buckle-up-cpus-are-going-to-get-weirder" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/cpus-getting-weirder.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Buckle up, CPUs are going to get weirder</h1>
+	<h2 id="the-m1-is-a-good-test-run-lets-get-ready">The M1 is a good test run, let’s get ready</h2>
+
+<p>(Note: This post is adapted from last week’s <a href="https://newsletter.researchcomputingteams.org/archive/5246c80f-2211-470c-94cb-d25496e8d5e8">issue 51</a> 
+of the <a href="https://www.researchcomputingteams.org">resarch computing teams newsletter</a>)</p>
+
+<p>The big news of the past month has been Apple’s new <a href="https://www.anandtech.com/show/16252/mac-mini-apple-m1-tested/7">M1
+CPU</a>.
+The M1’s specs in and of themselves kind of interesting, but more
+important to us in research computing is that the M1 is an example
+of how CPUs are going to get more different as time goes on, and
+that will have impacts on our teams.  The M1 going to be a trial run for
+a future of more diverse computing architectures that we’d do well
+to get ready for.</p>
+
+<p>Large-scale research computing systems have all been about “co-design”
+for ages, but the truth is that in the mainstream, big-picture CPU
+design choices have been pretty fixed, with most of co-design
+being about choice of accelerators or mix and match between CPU,
+memory. and acceleration.  Now that the market has accepted ARM as
+a platform — and with <a href="https://riscv.org">RISC-V</a> on its way — we
+can expect to start seeing bolder choices for CPU design being
+shipped, with vendors making very different tradeoffs than have
+been made in the past.  So whether or not you see yourself using
+Apple hardware in the future, M1’s choices and their consequences
+are interesting.</p>
+
+<p>M1 makes two substantially different trade-offs.  The first is
+having DRAM on socket.  This sacrifices extensibility — you can’t
+just add memory — for significantly better memory performance and
+lower power consumption.  Accurately moving bits back and forth
+between chips takes a surprising amount of energy, and doing it
+fast takes a lot of power!   The results are striking:</p>
+
+<blockquote class="twitter-tweet"><p dir="ltr" lang="ja">M1 MacBook AirでLINPACK動かして電力測定をしてみた。USB PD電力計＋iOS用Linpackという謎アプリのため参考値だが34.01 GFlops/W。まともに測るべきだしスケールしないやり方なので比べられる値ではないが、点灯したLCD込みでGreen 500の1位は超えていることに… うーん、正しいのか？ <a href="https://t.co/ldEroByfxt">pic.twitter.com/ldEroByfxt</a></p>
+&mdash; Ohtsuji (@ohtsuji) <a href="https://twitter.com/ohtsuji/status/1328768907461623808?ref_src=twsrc%5Etfw">November 17, 2020</a></blockquote>
+
+<p>LINPACK - solving a set of linear equations - is a pretty flawed
+benchmark, but it’s widely understood.  The performance numbers
+here are pretty healthy for a chip with four big cores, but the
+<em>efficiency</em> numbers are startling.  They’re not unprecedented
+except for the context; these wouldn’t be surprising numbers for a
+GPU, which also have DRAM-on-socket, and are similarly non-extensible.
+But they are absurdly high for something more general-purpose like
+a CPU.</p>
+
+<p>Having unified on-socket memory between CPU and integrated GPU also
+makes possible some <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">great Tensorflow
+performance</a>,
+simultaneously speeds up and lowers power consumption for <a href="https://www.macrumors.com/2020/11/17/apple-silicon-m1-compiles-code-as-fast-as-mac-pro/">compiling
+code</a>,
+and does weirdly well at running
+<a href="https://info.crunchydata.com/blog/postgresql-benchmarks-apple-arm-m1-macbook-pro-2020">postgreSQL</a>.</p>
+
+<p>The second tradeoff has some more immediate effects for research
+computing teams. Apple, as is its wont, didn’t worry too much about
+backwards-looking compatibility, happily sacrificing that for
+future-looking capabilities.  The new Rosetta (x86 emulation) seems
+to work seamlessly and is <a href="https://twitter.com/pmelsted/status/1329934691944816640">surprisingly
+performant</a>.  But
+if you want to take full advantage of the architecture of course
+you have to compile natively.  And on the day of release, a lot of
+key tools and libraries didn’t just “automatically” work the way
+they seemed to when most people first started using other ARM chips.
+(Though that wasn’t magic either; the ecosystem had spent years
+slowly getting ready for adoption by the mainstream.)</p>
+
+<p>“Freaking out” wouldn’t be too strong a way to describe
+the reaction in some corners; one user claimed that GATK would
+<a href="https://twitter.com/biocrusoe/status/1328704001039339521">“never
+work”</a> on
+Apple silicon (because a build script mistakenly assumed that an
+optional library that had Intel-specific optimizations would be
+present - they’re on it), and the absence of a free fortran compiler
+on the day of hardware release worried other people (there’s already
+<a href="https://github.com/fxcoudert/gfortran-for-macOS/releases/tag/11-arm-alpha1">experimental gfortran
+builds</a>).
+Having come of computational science age in the 90s when new chips
+took months to get good tooling for, the depth of concern seemed a
+bit overwrought.</p>
+
+<p>This isn’t to dismiss the amount of work that’s needed to get
+software stacks working on new systems.  Between other ARM systems
+and M1, a lot of research software teams are going to have to put
+in a lot of time porting new low-level libraries and tools to the
+new architectures.  Many teams that haven’t had to worry about this
+sort of thing before are going to have to refactor architecture-specific
+optimizations out and into libraries.  Some code will simply have
+to be rewritten - some R code has depended on <a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Intel-specific NaN
+handling</a>
+to implement NA semantics (which are <a href="https://blog.revolutionanalytics.com/2016/07/understanding-na-in-r.html">similar to but different
+from</a>
+NaN) that M1 does not honour, so natively compiled R needs extra
+checks on M1.</p>
+
+<p>It’s also not to dismiss the complexity that people designing and
+running computing systems will have to face.  Fifteen years ago,
+the constraints on a big computing system made things pretty clear — 
+you’d choose a whackload of x86 with some suitably fast (for your application)
+network. The main question were how fat are the nodes, what’s
+the mix of low, medium, and high-memory nodes, and what your storage
+system is like.  It’s been more
+complex for a while with accelerators, and now with entirely different
+processor architectures in the mix, it will get harder.  Increasingly,
+there is no “best” system; a system has to be tuned to favour some
+specific workloads.  And that necessarily means disfavouring others,
+which centres have been loathe to do.</p>
+
+<p>So the point here isn’t M1.  Is M1 a good choice for your research
+computing support needs?  Almost certainly not if you run on clusters.
+And if you’re good with your laptop or desktop, well, then lots of
+processors will work well enough.</p>
+
+<p>But even so, a lot of software is going to now have to support these
+new chips. And this is just the start of “weird” CPUs 
+coming for research computing.</p>
+
+<p>CPUs will keep coming that will make radically different tradeoffs
+than choices than seemed obvious before.  That’s going to make
+things harder for research software and research computing systems
+teams for a while.  A lot of “<a href="https://encyclopedia2.thefreedictionary.com/vaxocentrism">all the world’s an
+x86</a>”
+assumptions - some that are so ingrained they are currently hard
+to see - are going to get upended, and setting things back right
+is going to take work.  The end result will be more flexible and
+capable code, build systems, and better-targeted systems, but it’ll
+take a lot of work to get there.   If you haven’t already started
+using build and deployment workflows and processes that can handle
+supporting multiple architectures, now is a good time to start.</p>
+
+<p>But the new architectures, wider range of capabilities, and different
+tradeoff frontiers are also going to expand the realm of what’s
+possible for research computing.  And isn’t that why we got into
+this field?</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2020/pdsw-20-recap/">< PDSW'20 Recap</a>
+	 
+	<a class="next" href="/personal-blog/2020/sc-20-recap/">SC'20 Recap ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
