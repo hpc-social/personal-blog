@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>IBM Platform HPC V3.2- GPU Management with NVIDIA CUDA 5 - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2013-04-24T18:32:15-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2013/ibm-platform-hpc-v3-2-gpu-management-with-nvidia-cuda-5/"/>
+        <meta property="og:title" content="IBM Platform HPC V3.2- GPU Management with NVIDIA CUDA 5 - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="IBM Platform HPC V3.2- GPU Management with NVIDIA CUDA 5 - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">24.04.2013  &middot; <span class="reading-time" title="Estimated read time">
+  
+   9 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/ibm-platform-hpc-v3-2-gpu-management-with-nvidia-cuda-5&amp;text=IBM Platform HPC V3.2- GPU Management with NVIDIA CUDA 5 - https://hpc.social/ibm-platform-hpc-v3-2-gpu-management-with-nvidia-cuda-5" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/hpc32_cuda/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>IBM Platform HPC V3.2- GPU Management with NVIDIA CUDA 5</h1>
+	<p>IBM Platform HPC V3.2 is easy-to-use, yet comprehensive technical computing
+cluster management software. It includes as standard GPU scheduling, managementand monitoring capabilities for systems equipped with NVIDIA Tesla GPUs.</p>
+
+<p>IBM Platform HPC V3.2 has support out of the box for NVIDIA CUDA 4.1,
+including a NVIDIA CUDA 4.1 software <em>Kit</em>. The Kit allows for simplified
+deployment of software in a clustered environmnet.</p>
+
+<p>If your cluster is equipped with the latest NVIDIA Tesla hardware based upon
+the Kepler architecture, you may require NVIDIA CUDA 5.  Here we discuss the
+steps to install a configure a IBM Platform HPC V3.2 cluster with NVIDIA
+Tesla Kepler hardware.</p>
+
+<p><strong>Definitions</strong></p>
+
+<p>The following capabilities in IBM Platform HPC V3.2 will be used to facilitate
+the deployment of NVIDIA CUDA 5. The steps detailed below will assume
+familiarity with IBM Platform HPC V3.2 tools.</p>
+
+<ul>
+<li><strong>Cluster File Manager (CFM)</strong>: This will be used to automate patching of the
+system boot files to perform the installation of NVIDIA CUDA 5.</li>
+<li><strong>Post-Install script</strong>:  This is used to trigger the execution of the system
+startup file on first boot post-provisioning.</li>
+</ul>
+<p><strong>Environment Preparation</strong></p>
+
+<p>It is assumed that the IBM Platform HPC V3.2 head node has been installed and
+that there are compute nodes equipped with NIVDIA Tesla GPUs that will be added
+(provisioned) to the cluster.  The specifications of the example environment
+follow:</p>
+
+<ul>
+<li>IBM Platform HPC V3.2 (Red Hat Enterprise Linux 6.2 x64)</li>
+<li>NVIDIA® Tesla® K20c</li>
+<li>NVIDIA CUDA 5 (cuda_5.0.35_linux_64_rhel6.x-1.run)</li>
+</ul>
+<p>Two node cluster:</p>
+
+<ul>
+<li><em>installer000</em> (Cluster head node)</li>
+<li><em>compute000</em> (Compute node equipped with Tesla K20C)</li>
+</ul>
+<p>Here we fulfil the pre-requisites necessary for before provisioning the compute
+node(s) equipped with NVIDIA Tesla.</p>
+
+<ol>
+<li>The Administrator of the cluster must download NVIDIA CUDA 5 and copy to the
+/shared directory on the IBM Platform HPC head node. This directory is NFS
+mounted by all compute nodes managed by IBM Platform HPC. Note that the
+execute bit must be set on the CUDA package file.</li>
+</ol>
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># cp ./cuda_5.0.35_linux_64_rhel6.x-1.run /shared</span>
+ 
+<span style="color: #75715e;"># chmod 755 /shared/cuda_5.0.35_linux_64_rhel6.x-1.run  </span>
+ 
+<span style="color: #75715e;"># ls -la /shared/cuda*</span>
+-rwxr-xr-x <span style="color: #ae81ff;">1</span> root root <span style="color: #ae81ff;">702136770</span> Apr  <span style="color: #ae81ff;">4</span> 20:59 /shared/cuda_5.0.35_linux_64_rhel6.x-1.run</code></pre></div>
+
+<ol start="2">
+<li>On the IBM Platform HPC head node, create a new nodegroup for nodes
+equipped with NVIDIA Tesla hardware.  The new nodegroup template is given the
+name <em>compute-rhel-6.2-x86_64_Tesla</em> and is a copy of the built-in nodegroup
+template <em>compute-rhel-6.2-x86_64</em>.</li>
+</ol>
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># kusu-ngedit -c compute-rhel-6.2-x86_64 -n compute-rhel-6.2-x86_64_Tesla</span>
+Running plugin:  /opt/kusu/lib/plugins/cfmsync/getent-data.sh
+….
+….
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/root/.ssh/authorized_keys
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/root/.ssh/id_rsa
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/opt/kusu/etc/logserver.addr
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/opt/lsf/conf/hosts
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/opt/lsf/conf/profile.lsf
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/group.merge
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/hosts.equiv
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/hosts
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/shadow.merge
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/.updatenics
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/passwd.merge
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/fstab.kusuappend
+New file found:  /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/ssh/ssh_config
+….
+….
+Distributing <span style="color: #ae81ff;">76</span> KBytes to all nodes.
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255</code></pre></div>
+
+<ol start="3">
+<li>Configure the CFM framework to patch the <em>/etc/rc.local</em> on a set of compute
+nodes. The following example script will check for the existence of the NVIDIA
+CUDA tool <em>nvidia-smi</em> on a node in <em>/usr/bin</em>.  If <em>nvidia-smi</em> is not found
+in <em>/usr/bin</em>, the script  will mount the NFS share <em>/depot/shared</em> to <em>/share</em> and will run the NVIDIA CUDA installation with the option for silent
+(non-interactive) installation. Note that this example will need to be altered
+according to your environment (IPs, CUDA package name, etc).</li>
+</ol>
+<p><strong>Filename: /etc/cfm/compute-rhel-6.2-x86_64_Tesla/etc/rc.local.append</strong>
+<div class="highlight"><pre><code class="language-bash"> 
+
+<span style="color: #75715e;">#!/bin/sh</span>
+
+<span style="color: #75715e;"># If /usr/bin/nvidia-smi does not exist, then mount /shared filesystem on IBM Platform HPC # head node and run NVIDIA CUDA install with the silent option. </span>
+
+<span style="color: #66d9ef;">if</span> <span style="color: #f92672;">[</span> ! -f /usr/bin/nvidia-smi <span style="color: #f92672;">]</span>
+<span style="color: #66d9ef;">then</span>
+    mkdir /shared
+    mount -t nfs 10.1.1.150:/depot/shared /shared
+    /shared/cuda_5.0.35_linux_64_rhel6.x-1.run -driver -toolkit -silent
+<span style="color: #66d9ef;">fi</span></code></pre></div>
+</p>
+
+<ol start="4">
+<li>Create a post-installation script which will be configured to execute on a
+set of compute nodes.  The purpose of the post-installation script is to force
+the execution of the updated <em>/etc/rc.local</em> script during the initial boot of
+a node after provisioning.  The following example script is saved as <em>/root/run_rc_local.sh</em> on the IBM Platform HPC head node. Note that this script will be
+specified as a post-installation script in the subsequent steps.</li>
+</ol>
+<p><strong>Filename: /root/run_rc_local.sh</strong></p>
+
+<div class="highlight"><pre><code class="language-bash"> <span style="color: #75715e;">#!/bin/sh -x</span>
+
+/etc/rc.local &gt; /tmp/runrc.log 2&gt;&amp;<span style="color: #ae81ff;">1</span></code></pre></div>
+
+<ol start="5">
+<li>On the IBM Platform HPC head node, start <em>kusu-ngedit</em> and edit the
+nodegroup <em>installer-rhel-6.2-x86_64</em>. The following updates are required to
+enable monitoring of GPU devices in the IBM Platform HPC Web console.</li>
+</ol>
+<ul>
+<li>On the Components screen, enable <em>component-platform-lsf-gpu</em> under <em>platform-lsf-gpu</em>.</li>
+<li>(Select Yes to synchronise changes).</li>
+</ul>
+<ol start="6">
+<li>On the IBM Platform HPC head node, start <em>kusu-ngedit</em> and Edit the
+nodegroup <em>compute-rhel-6.2-x86_64_Tesla</em>. The following updates are required
+to enable the GPU monitoring agents on nodes, in addition to the required
+OS software packages, and kernel parameters for NVIDIA GPUs.</li>
+</ol>
+<ul>
+<li>On the Boot Time Paramters screen, add the following Kernel Params (at the
+end of the line): <em>rdblacklist=nouveau nouveau.modeset=0</em>.</li>
+<li>On the Components screen, enable <em>component-platform-lsf-gpu</em> under
+<em>platform-lsf-gpu</em>.</li>
+<li>On the Optional Packages screen, enable the following packages:
+<em>kernel-devel, gcc, gcc-c++</em></li>
+<li>On the Custom Scripts screen, add the script <em>/root/run_rc_local.sh</em></li>
+<li>(Select Yes to synchronise changes).</li>
+</ul>
+<ol start="7">
+<li>Update the configuration of the IBM Platform HPC workload manager.  This is
+required in order for the NVIDIA CUDA specific metrics to be taken into account.
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># kusu-addhost -u</span>
+Running plugin:  /opt/kusu/lib/plugins/cfmsync/getent-data.sh
+Updating installer<span style="color: #f92672;">(</span>s<span style="color: #f92672;">)</span>
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Setting up dhcpd service...
+Setting up dhcpd service successfully...
+Setting up NFS export service...
+Running plugin:  /opt/kusu/lib/plugins/cfmsync/getent-data.sh
+Distributing <span style="color: #ae81ff;">60</span> KBytes to all nodes.
+Updating installer<span style="color: #f92672;">(</span>s<span style="color: #f92672;">)</span>
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255</code></pre></div>
+</li>
+</ol>
+<p><strong>Provision nodes equipped with NVIDIA Tesla</strong></p>
+
+<p>With the environment pre-requisites complete, the provisioning of the compute
+nodes equipped with NVIDIA Tesla follows. Provisioning of nodes may be done
+using the IBM Platform HPC Web Console, or via the kusu-addhost CLI/TUI. Here,
+we provision the node using the <em>kusu-addhost</em> CLI with the newly created
+nodegroup template <em>compute-rhel-6.2-x86_64_Tesla</em>.</p>
+
+<p>Note that once nodes are discovered by <em>kusu-addhost</em>, the administrator must
+exit from the listening mode by pressing Control-C. This will complete the
+node discovery process.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;"># kusu-addhost -i eth0 -n compute-rhel-6.2-x86_64_Tesla -b</span>
+ 
+Scanning syslog <span style="color: #66d9ef;">for</span> PXE requests...
+Discovered Node: compute000
+Mac Address: 00:1e:67:31:45:58
+^C
+Command aborted by user...
+Setting up dhcpd service...
+Setting up dhcpd service successfully...
+Setting up NFS export service...
+Running plugin:  /opt/kusu/lib/plugins/cfmsync/getent-data.sh
+Distributing <span style="color: #ae81ff;">84</span> KBytes to all nodes.
+Updating installer<span style="color: #f92672;">(</span>s<span style="color: #f92672;">)</span>
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255
+Sending to 10.1.1.255</code></pre></div>
+
+<p><strong>Monitoring nodes equipped with NVIDIA Tesla</strong></p>
+
+<p>After having provisioned all of your GPU equipped nodes, it is now possible to
+monitor GPU related metrics via the IBM Platform HPC Web Console. Point a
+supported web browser to the IBM Platform HPC head node and login as a user
+with Administrative privileges.  The URL to be used:  <em>http://&lt;IBM_Platform_HPC_head_node&gt;</em></p>
+
+<p>The IBM Platform Web Console provides a view of GPU metrics under</p>
+
+<ul>
+<li>Dashboard/Rack View</li>
+</ul>
+<figure><img src="https://www.gaborsamu.com/images/HPC32_Rack_singleGPU.png" />
+</figure>
+
+<p>Within the Dashboard view, hover the mouse pointer over a node equipped with
+NVIDIA Tesla.  The popup will display the GPU temperature and ECC errors.</p>
+
+<ul>
+<li>Host List View (GPU Tab)</li>
+</ul>
+<figure><img src="https://www.gaborsamu.com/images/HPC32_GUI_singleGPU.png" />
+</figure>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2012/present-and-future-computing-data-and-networks-committee-of-the-canadian-astronomical-society-casca/">< Present and Future Computing, Data, and Networks Committee of the Canadian Astronomical Society (CASCA)</a>
+	 
+	<a class="next" href="/personal-blog/2013/isc-2013-wrapup-ibm-platform-hpc-and-intel-xeon-phi/">ISC 2013 wrapup- IBM Platform HPC and Intel Xeon Phi ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>What I've Learned from Looking at 1,500 Jobs Leading Research Computing Teams - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2022-02-26T00:00:00-07:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2022/what-i-ve-learned-from-looking-at-1-500-jobs-leading-research-computing-teams/"/>
+        <meta property="og:title" content="What I've Learned from Looking at 1,500 Jobs Leading Research Computing Teams - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="What I've Learned from Looking at 1,500 Jobs Leading Research Computing Teams - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">26.02.2022  &middot; <span class="reading-time" title="Estimated read time">
+  
+   7 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/what-i-ve-learned-from-looking-at-1-500-jobs-leading-research-computing-teams&amp;text=What I've Learned from Looking at 1,500 Jobs Leading Research Computing Teams - https://hpc.social/what-i-ve-learned-from-looking-at-1-500-jobs-leading-research-computing-teams" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/1500-jobs.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>What I've Learned from Looking at 1,500 Jobs Leading Research Computing Teams</h1>
+	<h2 id="job-numbers-continue-to-grow-lots-of-data-and-product-management-jobs-ir-groups-at-universities-becoming-bigger-employers">Job numbers continue to grow; lots of data and product management jobs; IR groups at Universities becoming bigger employers</h2>
+
+<p>(Note: This post is adapted from <a href="https://www.researchcomputingteams.org/newsletter_issues/0111">#111</a> of the <a href="https://www.researchcomputingteams.org">Research Computing Teams Newsletter</a>)</p>
+
+<p>A year and a half ago I <a href="https://www.dursi.ca/post/jobs_managing_research_computing_teams">posted</a> my observations on the first 500 jobs posted to <a href="https://www.researchcomputingteams.org/jobs">the job board</a> - we’re getting close to 1,500 now, and it’s worth taking a look to see what if anything has changed in research computing team leadership and management jobs<sup id="fnref:1"><a class="footnote" href="https://www.dursi.ca/feed.xml#fn:1" rel="footnote">1</a></sup>.</p>
+
+<p>There are some trends that have continued since the posting.  The jobs in industry are growing vastly beyond what I would have imagined possible when I started in research computing in the 1990s.  (The number of jobs working with biomedical data of one sort or another in particular is just astonishing.)  Rather than technical computing being a niche, it’s utterly mainstream now.  There are a <em>lot</em> of jobs out there, and I don’t even bother posting generic “data science manager” jobs unless they’re connected to some real complex research questions - which happens a lot, whether it’s fraud detection or improving financial modelling or supporting biomedical research.  Some really fun-looking jobs that would probably feel a lot like working at a research computing centre keep coming up at consultancies –– go visit a client and help them with their data science/data engineering/<em>etc</em> needs.  There’s also a growing number of data science/engineering jobs at Universities that fall under the Provost/VP Operations rather than the VPR’s side of the house — Institutional Research, looking at (say) student success in support of the teaching mission.</p>
+
+<p>Because of the growth in number of jobs, it is very much a candidate’s market out there.  I’m seeing postings –– <em>especially</em> for the traditional academic “director of research computing” jobs –— stay open for cringe-inducing periods of time.  A few in particular I’ve watched with vicarious embarrassment continue coming up in the listings for 8+ months.  That’s a bad sign for us as hiring managers - the market for individual contributors is at least as tight - but it’s amazing news for us as individuals.</p>
+
+<p>When I wrote that post in late 2020 it was just regulated industries like health/biotech or financial services that were developing data governance or other data management jobs, but now data management is popping up everywhere, whether it’s retail or logistics or anywhere else.   These are being joined, again first in the regulated industries, by data privacy or data risk management jobs.  Privacy-preserving data analysis jobs (and teams supporting same with software development) are also starting to be more common (and there’s a <em>lot</em> of cool research and technology work to be done there!)</p>
+
+<p>I’m also (finally!) starting to see a explicitly <em>product</em> management jobs in research computing, both academic and private-sector.  You see it around data management — bundling and curating of data into real data products — but also in software development, especially around analysis pipelines for some reason.</p>
+
+<p>Probably related to the growth of product <em>vs</em> project thinking, I’m starting to see a lot of “delivery manager” jobs that would have been called “project managers” just a year ago.   Projects are defined by having clearly defined start- and end-points up-front.  “Delivery” jobs seem to focus on sustained, ongoing work, more appropriate for long-lived products.</p>
+
+<p>These products that keep coming up often combine data, software, and systems one way or another.  That really points to weaknesses around organizing by type of skills - the research software engineering movement, for instance - as the lines between software and systems in this DevOps, infrastructure-as-code era is very fuzzy; and as data grows more and more important, data skills are needed everywhere.</p>
+
+<p>Especially for us as managers or leads, but especially for individual contributors as they grow their skills, it’s important to have a pretty holistic view of research computing and data and not try to break it up into silos.  The growing number of data engineering jobs is a great example.  That work often involves all three of software, systems, and data expertise.   Data engineering is getting so broad and important that not only are there different sub-fields, in large organizations there are likely to be <a href="https://medium.com/data-arena/team-topologies-for-data-engineering-teams-a15c5eb3849c">completely distinct data engineering teams</a> doing different work.  Trying to decide which of those jobs are “research software engineering” jobs and which aren’t is not a productive way forward, for those candidates or for us as a community.</p>
+
+<p>Needless to say, the growth of remote jobs has been off the charts - especially in the private sector, although the academic institutions are gamely doing what they can to keep up (often hampered by institutional policies).</p>
+
+<p><strong>Late June 2022 update</strong>: At the time that I write this, there’s a slow down in hiring in tech, especially among early stage-startups.  That slowdown due to economic conditions as I write this is <em>not</em>, as far as I can tell, affecting these more research-oriented kinds of jobs.  The job board doesn’t have a lot of jobs from startups anyway.  For larger organizations, the biotech firms or the banking firms doing fraud detection research or the computing providers or academic groups or…  clearly do not view these roles as “nice to haves” that can wait until there’s a bit more economic certainty.</p>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>What counts as such a job?  Any job that involves leading, or mentoring people, or managing projects, programs, or products, in software, systems, or data curation/management/engineering/analysis to support the solution of research problems is a good fit.  If you are hiring for such a job, feel free to <a href="https://airtable.com/shrL6QGic3Mv9JFrs">submit it to the job board</a>. <a class="reversefootnote" href="https://www.dursi.ca/feed.xml#fnref:1">&#8617;</a></p>
+
+    </li>
+  </ol>
+</div>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2022/a-supportive-job-interview-story/">< A supportive job interview story</a>
+	 
+	<a class="next" href="/personal-blog/2022/an-unstructured-rant-on-running-long-lived-software-services/">An unstructured rant on running long-lived software services ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
