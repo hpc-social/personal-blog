@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Codes as Instruments- Community Applications and Simulation Software for the Hardware Architectures of the Next Decade - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2010-06-17T01:00:00-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2010/codes-as-instruments-community-applications-and-simulation-software-for-the-hardware-architectures-of-the-next-decade/"/>
+        <meta property="og:title" content="Codes as Instruments- Community Applications and Simulation Software for the Hardware Architectures of the Next Decade - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Codes as Instruments- Community Applications and Simulation Software for the Hardware Architectures of the Next Decade - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">17.06.2010  &middot; <span class="reading-time" title="Estimated read time">
+  
+   4 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/codes-as-instruments-community-applications-and-simulation-software-for-the-hardware-architectures-of-the-next-decade&amp;text=Codes as Instruments- Community Applications and Simulation Software for the Hardware Architectures of the Next Decade - https://hpc.social/codes-as-instruments-community-applications-and-simulation-software-for-the-hardware-architectures-of-the-next-decade" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="http://www.dursi.ca">Jonathan Dursi</a>&nbsp;R&amp;D computing at scale.&nbsp;See the original post&nbsp;<a target="_blank" href="http://www.dursi.ca/post/codes-as-instruments-community-applications-and-simulation-software-for-the-hardware-architectures-of-the-next-decade.html">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Codes as Instruments- Community Applications and Simulation Software for the Hardware Architectures of the Next Decade</h1>
+	<p>It is becoming increasingly problematic that, even as computing and data becomes more and more fundamental to research, and the complexity and diversity of computing technologies out there grows, getting stable funding for developing high-quality research software remains so difficult.</p>
+
+<p>In <a href="https://www.dursi.ca/assets/pdfs/CAI.pdf">this whitepaper</a> for the <a href="http://www.casca.ca/lrp2010/">CASCA 2010 Long Range Plan</a>, my colleague <a href="http://www.astro.uvic.ca/~fherwig/">Falk Herwig</a> and I lay out the case for increased funding of R&amp;D software development by professional research software developers.  We make a couple points which I genuinely believe to be strong:</p>
+
+<p>First, increased benefits. A successful community code can support an enoormous body of research.  By the (admittedly somewhat crude) count we use in this paper, the top six reseach codes in Astronomy accounted for approximately 50% of the computational astronomy publications over the period of study, and the top three - <a href="http://www.nublado.org/">Cloudy</a>, <a href="http://www.mpa-garching.mpg.de/galform/gadget/">Gadget</a>, and <a href="http://www.flash.uchicago.edu/site/">FLASH</a>, which I was part of - accounted for nearly 40%.  That is an enormous about of R&amp;D effort enabled by those projects.</p>
+
+<p>Second, reduced costs. We cite from the growing research software development literature to demonstrate the high (and growing) challenges of engineering these codes in a scientists’ spare time, and the high cost of software defects.  By having a small cadre of professional research software development personnel, better quality software can be developed more efficiently.</p>
+
+<p>Finally, a word about the title - this is an analogy due to Falk, and while it’s been controversial, I think there’s a lot of truth to it.  Astronomy has always relied heavily on, for instance, telescopes - but a telescope is only part of an observational facility.  A big photon-gathering dish is only as useful as the scientific instrument that’s placed at its focus to make sense of those photons.  Similarly, a huge computer by itself has no scientific value without software to run on it.  Unless our community invests in computational instruments with the same level of seriousness as observational instruments, our ability to make use of these facilities is going to be needlessly limited.</p>
+
+<h3 id="abstract">Abstract</h3>
+
+<p>Modern astronomical research requires increasingly sophisticated computing facilities and software tools. Computational tools have become the fundamental tools to turn observational raw data into scientific insight. Complex multi-physics simulation codes have developed into tools for numerical experiments that provide scientific insight beyond classical theory. Canadian researchers need an environment for developement and maintenance of these critical tools. In particular, the drastically enhanced complexity of deeply heterogeneous hardware architectures poses a real challenge to using present and future HPC facilties.</p>
+
+<p>Without a national program in astrophysical simulation science and astronomy application code developement we are becoming vulnerable with respect to our ability to maximise the scientific return from existing and planned investments into atronomy. In addition, there are significant industrial/commercial HQP needs that simulation and application code program could start to address, if it is properly aligned with academic training opportunities.</p>
+
+<p>We outline the framework and requirements for such a framework for developing Canadian astronomical application and simulation codes — and code builders. In the US decadal plan process, voices are calling for similar emphasis on developing infrastructure and incentives for open community codes (Weiner et al. 2009). We propose funding several small interdisciplinary teams of postdocs, graduate students, and staff, housed in departments at Universities that have or are about to make a commitment in a relevant area (e.g. applied math, computational physics, modeling science). These teams can, while training astronomical and computational HQP, focus on building tools that have been deemed to be high priorities by the astronomical and astrophysical communities in order to make the best scientific use of our new computational faciliites.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2010/canadian-astronomical-computing-data-and-network-facilities-a-white-paper-for-the-2010-long-range-plan/">< Canadian Astronomical Computing, Data And Network Facilities- A White Paper for the 2010 Long Range Plan</a>
+	 
+	<a class="next" href="/personal-blog/2011/testing-roundoff/">Testing Roundoff ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

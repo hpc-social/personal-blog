@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>New Year's Resolution for HPC- Using Resources More Efficiently - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2022-01-04T20:27:54-07:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2022/new-year-s-resolution-for-hpc-using-resources-more-efficiently/"/>
+        <meta property="og:title" content="New Year's Resolution for HPC- Using Resources More Efficiently - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="New Year's Resolution for HPC- Using Resources More Efficiently - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">04.01.2022  &middot; <span class="reading-time" title="Estimated read time">
+  
+   3 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/new-year-s-resolution-for-hpc-using-resources-more-efficiently&amp;text=New Year's Resolution for HPC- Using Resources More Efficiently - https://hpc.social/new-year-s-resolution-for-hpc-using-resources-more-efficiently" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/2022_hpc/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>New Year's Resolution for HPC- Using Resources More Efficiently</h1>
+	<p>A hearty happy new year to everyone.  It’s that time of the year that we hear from folks about their resolutions for new year’s. But rather than talk about me purchasing a gym membership, I’d like to share my thoughts on a new year’s resolution for HPC.</p>
+
+<p>With the topsy-turvy weather that we’re seeing all over the planet, we’re all acutely aware of the changes that are happening to our climate and what is represents for humankind. HPC is a key engine for science, including efforts that are crucial to help with our climate change battle. Climate and ocean modelling are some examples of the use of HPC that immediately come to mind in this respect.  Modelling the environment is important for us to understand what is occurring around us and what is projected to occur.  Additionally, materials science is also important in order to help develop the necessary technologies to more effectively store energy from renewable sources and transmit, generate energy.  HPC is a consumer of energy, which brings me to the HPC resolution for this year – using computing resources more efficiently.</p>
+
+<p>We’ve seen great strides in the efficiency of processors and systems.  But at scale, large HPC centers consume large amounts of energy for both powering the servers and storage systems, as well as the cost of cooling.  And if you’re using cloud for HPC, then of course you’re not concerned with the energy and cooling, but rather the cost to you.  In either case, making the most efficient use of your infrastructure should be a key consideration. Workload schedulers are the interface between users and jobs in any HPC environment. Users submit work and it’s the task of the workload scheduler to find suitable compute resources to dispatch the work to.  On the surface, this may seem like a trivial task.  But with potentially large numbers of jobs, users, servers and priorities, workload and resource management is anything but a trivial.  The good news is that there are workload management solutions which bring decades of experience to the table.</p>
+
+<p>IBM Spectrum LSF Suites provide a fully integrated workload management solution for HPC environments. LSF builds on almost 30 years of experience in workload and resource management and is used on some of the worlds’ largest supercomputers including <a href="https://www.olcf.ornl.gov/olcf-resources/compute-systems/summit/">Summit</a>, at the Oak Ridge Leadership Computing Facility.  On a high-level, here are some critical areas where LSF can help to drive better efficiency in your HPC infrastructure:</p>
+
+<ul>
+<li>Dynamic hybrid cloud – automatically flex up and down cloud resources according to policies, with support for all major cloud providers. Learn more <a href="https://mediacenter.ibm.com/media/Dynamic%20hybrid%20cloud%20with%20IBM%20Spectrum%20LSF/1_u69d0jpi">here</a></li>
+<li>Dynamic multi-instance GPU support – right size NVIDIA A100 multi-instance GPU slices according to incoming workload demands. Learn more <a href="https://medium.com/ibm-data-ai/i-had-a-dream-i-got-every-gpu-i-wanted-75291f4e96e9?source=friends_link&amp;sk=535b00f1d534d0bafed7a4b112189b7e">here</a></li>
+<li>User productivity – single unified UI for job submission and management which captures repeatable best practices. Learn more <a href="https://www.gaborsamu.com/blog/easy_hpc/">here</a></li>
+</ul>
+<p>Start the year off right, with a focus efficiency in your HPC environment with IBM Spectrum LSF.  Learn more <a href="https://www.ibm.com/us-en/products/hpc-workload-management">here</a>.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2021/hello-operator-i-need-an-hpc-cluster-fast/">< Hello operator. I need an HPC cluster – fast</a>
+	 
+	<a class="next" href="/personal-blog/2022/things-that-are-hard/">Things that are Hard ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+

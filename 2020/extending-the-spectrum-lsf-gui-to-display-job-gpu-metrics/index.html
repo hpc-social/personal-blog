@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Extending the Spectrum LSF GUI to display job GPU metrics - hpc.social - Aggregated Personal Blog</title>
+        <meta name="description" content="Shared personal experiences and stories">
+        <meta name="keywords" content="">
+        <base href="https://hpc.social/personal-blog" />
+        
+        <meta content="2020-09-04T17:30:44-06:00" property="article:published_time">
+        <meta content="https://hpc.social/about/" property="article:author">
+          
+        <meta property="og:site_name" content="hpc.social - Aggregated Personal Blog">
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="https://hpc.social/personal-blog/2020/extending-the-spectrum-lsf-gui-to-display-job-gpu-metrics/"/>
+        <meta property="og:title" content="Extending the Spectrum LSF GUI to display job GPU metrics - hpc.social - Aggregated Personal Blog" />
+        <meta property="og:description" content="Shared personal experiences and stories" />
+        <meta property="og:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"/>
+        <meta name="twitter:site" content="@hpc_social" />
+        <meta name="twitter:creator" content="@hpc_social" /> 
+        <meta name="twitter:card" content="summary"/>
+        <meta property="twitter:title" content="Extending the Spectrum LSF GUI to display job GPU metrics - hpc.social - Aggregated Personal Blog" />
+        <meta property="twitter:description" content="Shared personal experiences and stories" />
+        <meta property="twitter:image" content="https://hpc.social/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="stylesheet" href="/personal-blog/assets/css/highlight.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@300&display=swap" rel="stylesheet"> 
+
+        <link rel="stylesheet" href="/personal-blog/assets/css/style.css">
+        <link rel="shortcut icon" href="/personal-blog/assets/images/hpc-social-blue.png" />
+        <link rel="alternate" type="application/atom+xml" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/atom.xml">
+        <link rel="alternate" type="application/json" title="hpc.social - Aggregated Personal Blog" href="https://hpc.social/personal-blog/feed.json" />
+        <link rel="sitemap" type="application/xml" title="sitemap" href="https://hpc.social/personal-blog/sitemap.xml" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"hpc.social"},"description":"Shared personal experiences and stories","headline":"hpc.social - Aggregated Personal Blog","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://hpc.social/personal-blog/assets/images/hpc-social-blue.png"},"name":"hpc.social"},"sameAs":["https://twitter.com/","https://github.com/"],"url":"https://hpc.social/personal-blog"}</script>
+    </head>
+<body>
+
+<div class="container">
+	<div class="profile">
+		<a href="https://hpc.social/personal-blog/"><img src="/personal-blog/assets/images/hpc-social-blue.png" class="profile-image"></a>
+		<div class="profile-about">
+			<h2 style="margin-bottom: 0; font-weight: 700;">hpc.social</h2>
+			
+			
+				<a href="https://twitter.com/hpc_social" target="_blank"><img src="/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+			
+			
+			
+			
+				<a href="https://github.com/hpc-social" target="_blank"><img src="/personal-blog/assets/images/icon/github.svg" class="social-icon"></a>
+			
+			
+			<a href="/personal-blog/about/"><img src="/personal-blog/assets/images/icon/me.svg" class="social-icon"></a>
+			<br>
+			High Performance Computing <br> Practitioners <br> and friends /#hpc
+			<br>
+			<div class="mode" id="mode-switcher" onclick="toggleNightMode();">
+				<span></span>
+			</div>
+		</div>
+	</div>
+	
+<div class="post-header">
+	<div class="post-date">04.09.2020  &middot; <span class="reading-time" title="Estimated read time">
+  
+   4 mins  read </span>
+</div>
+	<div class="post-share">
+		Share:&nbsp; 
+		<a href="https://twitter.com/intent/tweet?source=tweetbutton&amp;original_referer=https://hpc.social/extending-the-spectrum-lsf-gui-to-display-job-gpu-metrics&amp;text=Extending the Spectrum LSF GUI to display job GPU metrics - https://hpc.social/extending-the-spectrum-lsf-gui-to-display-job-gpu-metrics" target="_blank"><img src="https://hpc.social/personal-blog/assets/images/icon/twitter.svg" class="social-icon"></a>
+	</div>
+</div>
+
+<div class="tags-container" style="padding:10px; font-size:18px; font-style:italic">
+        This is a crosspost from &nbsp; <a target="_blank" href="https://www.gaborsamu.com/blog/">Blogs on Technical Computing Goulash</a>&nbsp;Recent content in Blogs on Technical Computing Goulash.&nbsp;See the original post&nbsp;<a target="_blank" href="https://www.gaborsamu.com/blog/gpu_pac/">here</a>.</div>
+
+<div class="blog-post-content">
+	<h1>Extending the Spectrum LSF GUI to display job GPU metrics</h1>
+	<p>I’ve previously written about accounting for GPU workloads in <a href="https://www.gaborsamu.com/blog/spectrumlsf_gpu_usage/">Spectrum LSF using Nvidia DCGM</a> to collect granular metrics including energy consumed, memory used, and overall GPU
+utilization. Spectrum LSF collects the information and it is made available through the familiar bhist and bacct
+commands.</p>
+
+<p>How can one go about displaying this information in the web-based job management interface that is provided by
+Spectrum LSF Application Center or as part of the Spectrum LSF Suites?  Here we will provide a simple example showing
+how:</p>
+
+<ul>
+<li>Administrators can customize the navigation in the Spectrum LSF web-based job management interface</li>
+<li>Display the same GPU accounting information in the Spectrum LSF web-based job management interface</li>
+</ul>
+<p><strong>The following assumes that DCGM support has been enabled in Spectrum LSF and that you are running an edition of
+the Spectrum LSF Suite or Spectrum LSF Application Center</strong></p>
+
+<p>The Spectrum LSF web-based job management interface enables GUI administrators to create new tabs with a user specified
+URL or command. Here we will create a new tab which runs a command (script) which will run the Spectrum LSF <em>bhist</em>
+command to display the GPU metrics for a given job. The script must be able to distinguish between a GPU and non-GPU
+job.</p>
+
+<p>A. To begin, we&rsquo;ll require a simple script to display the detailed historical data of a given <em>jobID</em>, including
+GPU metrics using the Spectrum LSF <em>bhist</em> command.  An example simple script is provided below which is saved
+with filename <em>gpu_acct.sh</em>.</p>
+
+<div class="highlight"><pre><code class="language-bash"><span style="color: #75715e;">#!/bin/sh
+</span><span style="color: #75715e;"></span><span style="color: #66d9ef;">if</span> <span style="color: #f92672;">[</span> -z <span style="color: #e6db74;">"</span>$1<span style="color: #e6db74;">"</span> <span style="color: #f92672;">]</span>
+<span style="color: #66d9ef;">then</span>
+   echo <span style="color: #e6db74;">"Usage </span>$0<span style="color: #e6db74;"> &lt;jobID&gt;"</span>
+<span style="color: #66d9ef;">else</span>
+OUTPUT<span style="color: #f92672;">=</span><span style="color: #e6db74;">`</span>bhist -a -l -gpu $1<span style="color: #e6db74;">`</span>
+grep -q <span style="color: #e6db74;">'GPU Energy Consumed'</span> <span style="color: #f92672;">&lt;&lt;&lt;</span> $OUTPUT <span style="color: #f92672;">&amp;&amp;</span> bhist -a -l -gpu $1 <span style="color: #f92672;">||</span> echo <span style="color: #e6db74;">"Not a GPU job."</span>
+<span style="color: #66d9ef;">fi</span></code></pre></div>
+
+<p>As the Spectrum LSF administrator, create the above script in the <em>$LSF_BINDIR</em> directory with permissions 755.</p>
+
+<p>B. Next, login to the Spectrum LSF web-based interface as a user with administrative privileges and navigate to
+<strong>Workload &gt; Workload</strong>.  Note that the user must have the <em>Application Center Administrator</em> privilege.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/workload_list2.png" />
+</figure>
+
+<p>C. It’s now necessary to select one of the jobs in the job list in order to display the job detail view. This is the
+page where we will be adding the GPU accounting tab.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/workload_detail2.png" />
+</figure>
+
+<p>D. Click the edit (pencil) dropdown that can be found at the top right of the Spectrum LSF web-based interface
+and select <em>Edit Page</em>.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/edit_page2.png" />
+</figure>
+
+<p>This will display the <em>Create New Tab</em> window which will be filled in during the next step.</p>
+
+<p>E. In the Create New Tab window, specify the following:</p>
+
+<ul>
+<li>Tab Label: <em>GPU accounting</em></li>
+<li>Content From: <em>Command</em> and specify the command <em>gpu_acct.sh %J</em></li>
+</ul>
+<p>Click the <em>Apply</em> button to complete the addition of the new tab on the job detail page.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/create_new_tab2.png" />
+</figure>
+
+<p>F. Finally, click the Edit Page dropdown on the top right corner of the interface and select
+<em>Apply and exit Pages Editing</em> to make the changes take effect. You will now see a new GPU accounting tab in the
+job detail view. Here I’ve selected a GPU job that has been run previously through Spectrum LSF. We see the full
+<em>bhist</em> output displayed here including the detailed GPU accounting.</p>
+
+<p><figure><img src="https://www.gaborsamu.com/images/apply_changes2.png" />
+</figure>
+
+<figure><img src="https://www.gaborsamu.com/images/gpu_acct2.png" />
+</figure>
+</p>
+
+<p>As a final note, for jobs that have not requested a GPU resource through Spectrum LSF, we will see the message
+“Not a GPU job&quot; displayed when the GPU accounting tab is selected.</p>
+
+<figure><img src="https://www.gaborsamu.com/images/not_gpu_job2.png" />
+</figure>
+
+<p>That concludes this simple example showing how the Spectrum LSF web-based interface can be customized.</p>
+
+</div>
+<div class="tags-container">
+	
+</div>
+<style>
+#uppy {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: darkturquoise;
+  color: black;
+  cursor: pointer;
+  margin:15px;
+  border-radius: 10px;
+  width: 100px;
+  height: 20px;
+}
+
+#returnTop:hover {
+  background-color: #555;
+}
+</style>
+
+<button id="uppy" title="Return to Top" class="btn btn-lg">Back to top</button>
+
+<script>
+(function() {
+
+var scrollTop = function() {
+    window.scrollTo(0, 0);
+};
+
+document.getElementById('uppy').onclick = scrollTop;
+
+})();
+</script>
+
+
+<div class="navigation">
+	
+		<a class="prev" href="/personal-blog/2020/white-managers-in-research-computing-we-need-to-be-speaking-out-about-racism-then-listening-and-advocating/">< White Managers in Research Computing, We Need to be Speaking Out About Racism, then Listening and Advocating</a>
+	 
+	<a class="next" href="/personal-blog/2020/xrootd-client-manager/">XRootD Client Manager ></a>
+
+</div>
+
+	<div class="footer">
+		<span style="padding-right:10px"><font color="red">©️ </font><a href="https://hpc.social"><b>hpc.social</b> community</a></span> 
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/archive/">Archive</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/">Posts</a>
+		| <a style="padding-left:10px; padding-right:10px" href="/personal-blog/about/">About</a>
+		| <a style="padding-left:10px; padding-right:10px" href="https://hpc.social/blog">hpc.social blogs</a>
+		| <a style="padding-left:37%;" target="_blank" href="https://github.com/hpc-social/personal-blog">Add Your Blog</a>
+	</div>
+</div>
+    <script src="/personal-blog/assets/scripts.js"></script>
+    <script type="text/javascript">
+        if (localStorage.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('mode-switcher').classList.add('active');
+        } else if (localStorage.theme === 'dark' || localStorage.theme === '' || (!('theme' in localStorage))) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('mode-switcher').classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
